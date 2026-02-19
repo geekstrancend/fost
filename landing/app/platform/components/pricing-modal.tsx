@@ -269,7 +269,6 @@ export default function PricingModal({
               </div>
             )}
           </div>
-          </div>
 
           {/* Credit Packages Grid */}
           <div className="grid md:grid-cols-4 gap-4 mb-8">
