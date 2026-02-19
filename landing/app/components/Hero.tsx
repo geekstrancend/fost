@@ -19,14 +19,13 @@ export default function Hero() {
           Best-in-Class
           <br />
           <span className="bg-gradient-to-r from-accent-green via-accent-green to-accent-green-dark bg-clip-text text-transparent">
-            Web3 SDK Generation
+            SDK Generation
           </span>
         </h1>
 
         {/* Subtitle */}
         <p className="mb-10 text-lg sm:text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed font-mono">
-          Smart contract ABIs → Type-safe SDKs. Multi-chain support, wallet integration, gas estimation, and event subscriptions. 
-          From ABI to production in minutes.
+          Web3 smart contracts & REST APIs → Type-safe SDKs in minutes. Multi-chain support, wallet integration, gas estimation, and more.
         </p>
 
         {/* CTA Buttons */}
@@ -38,11 +37,29 @@ export default function Hero() {
             Launch Dashboard
           </a>
           <a
-            href="/web3-docs"
+            href="/docs"
             className="inline-flex items-center justify-center px-8 py-3 border-2 border-accent-green text-accent-green font-semibold rounded-lg hover:bg-accent-green-light transition-all duration-200 shadow-md hover:shadow-lg font-mono"
           >
-            Web3 Features
+            View Documentation
           </a>
+        </div>
+
+        {/* Quick Start Section */}
+        <div className="grid gap-4 md:grid-cols-2 max-w-3xl mx-auto mb-8">
+          <div className="bg-white bg-opacity-70 backdrop-blur-sm border border-gray-200 rounded-lg p-4 shadow-lg">
+            <h3 className="font-mono font-bold text-sm mb-3 text-accent-green">🚀 Quick Start</h3>
+            <p className="text-xs text-gray-600 font-mono mb-3">Get started in 30 seconds with the init command:</p>
+            <code className="text-xs bg-gray-100 p-2 rounded block text-gray-800 font-mono overflow-x-auto">
+              fost init --type web3 --name my-sdk
+            </code>
+          </div>
+
+          <div className="bg-white bg-opacity-70 backdrop-blur-sm border border-gray-200 rounded-lg p-4 shadow-lg">
+            <h3 className="font-mono font-bold text-sm mb-3 text-accent-green">📚 New Guides</h3>
+            <p className="text-xs text-gray-600 font-mono">
+              Comprehensive guides for <span className="font-bold">Web2</span> (REST APIs), <span className="font-bold">Web3</span> (smart contracts), and <span className="font-bold">plugins</span>
+            </p>
+          </div>
         </div>
 
         {/* Features Grid */}
@@ -69,22 +86,37 @@ export default function Hero() {
         {/* Flow */}
         <div className="mt-12 bg-white bg-opacity-70 backdrop-blur-sm border border-gray-200 rounded-xl p-8 max-w-2xl mx-auto shadow-lg">
           <div className="space-y-3 text-sm text-gray-700 font-mono">
+            <p className="text-xs text-gray-500 mb-4 font-semibold">Get started: ABI or OpenAPI → SDK</p>
             <div className="flex items-center justify-between">
-              <span className="text-gray-500">1. Contract ABI</span>
+              <span className="text-gray-500">1. Upload Specification</span>
               <span className="text-accent-green">→</span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-gray-500">2. Select Chain & Language</span>
+              <span className="text-gray-500">2. Select Languages & Chain</span>
               <span className="text-accent-green">→</span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-gray-500">3. Integrated Features</span>
+              <span className="text-gray-500">3. Add Features (tests, docs)</span>
               <span className="text-accent-green">→</span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-gray-500">4. Download SDK</span>
+              <span className="text-gray-500">4. Download & Deploy</span>
               <span className="text-accent-green font-bold">✓</span>
             </div>
+          </div>
+        </div>
+
+        {/* Links to Documentation */}
+        <div className="mt-12 text-center">
+          <p className="text-xs text-gray-500 font-mono mb-4">Learn more:</p>
+          <div className="flex flex-wrap gap-3 justify-center">
+            <a href="/docs" className="text-xs font-mono text-accent-green hover:underline">Web2 Guide</a>
+            <span className="text-gray-400">•</span>
+            <a href="/docs" className="text-xs font-mono text-accent-green hover:underline">Web3 Guide</a>
+            <span className="text-gray-400">•</span>
+            <a href="/docs" className="text-xs font-mono text-accent-green hover:underline">CLI Reference</a>
+            <span className="text-gray-400">•</span>
+            <a href="/docs" className="text-xs font-mono text-accent-green hover:underline">Plugin Dev</a>
           </div>
         </div>
       </div>

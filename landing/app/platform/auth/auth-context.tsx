@@ -10,7 +10,7 @@ export interface User {
   avatar?: string;
   plan: 'free' | 'pro' | 'enterprise';
   credits: number;
-  createdAt: Date;
+  createdAt: string | Date;
 }
 
 export interface AuthContextType {
@@ -21,6 +21,8 @@ export interface AuthContextType {
   signup: (email: string, password: string, name: string) => Promise<void>;
   logout: () => Promise<void>;
   updateUser: (user: Partial<User>) => Promise<void>;
+  error: string | null;
+  clearError: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -28,6 +30,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   // Check if user is logged in on mount
   useEffect(() => {
@@ -39,9 +42,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         if (response.ok) {
           const userData = await response.json();
           setUser(userData);
+          setError(null);
         }
       } catch (error) {
         console.error('Auth check failed:', error);
+        setError('Failed to check authentication');
       } finally {
         setIsLoading(false);
       }
@@ -52,6 +57,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const login = async (email: string, password: string) => {
     setIsLoading(true);
+    setError(null);
     try {
       const response = await fetch('/api/auth/login', {
         method: 'POST',
@@ -59,9 +65,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         body: JSON.stringify({ email, password }),
         credentials: 'include',
       });
-      if (!response.ok) throw new Error('Login failed');
-      const userData = await response.json();
-      setUser(userData);
+      
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.error || 'Login failed');
+      }
+      
+      setUser(data);
+      setError(null);
+    } catch (err) {
+      const errorMsg = err instanceof Error ? err.message : 'Login failed';
+      setError(errorMsg);
+      throw err;
     } finally {
       setIsLoading(false);
     }
@@ -69,6 +85,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signup = async (email: string, password: string, name: string) => {
     setIsLoading(true);
+    setError(null);
     try {
       const response = await fetch('/api/auth/signup', {
         method: 'POST',
@@ -76,9 +93,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         body: JSON.stringify({ email, password, name }),
         credentials: 'include',
       });
-      if (!response.ok) throw new Error('Signup failed');
-      const userData = await response.json();
-      setUser(userData);
+      
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.error || 'Signup failed');
+      }
+      
+      setUser(data);
+      setError(null);
+    } catch (err) {
+      const errorMsg = err instanceof Error ? err.message : 'Signup failed';
+      setError(errorMsg);
+      throw err;
     } finally {
       setIsLoading(false);
     }
@@ -86,12 +113,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const logout = async () => {
     setIsLoading(true);
+    setError(null);
     try {
       await fetch('/api/auth/logout', {
         method: 'POST',
         credentials: 'include',
       });
       setUser(null);
+      setError(null);
+    } catch (err) {
+      const errorMsg = err instanceof Error ? err.message : 'Logout failed';
+      setError(errorMsg);
+      throw err;
     } finally {
       setIsLoading(false);
     }
@@ -105,13 +138,24 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         body: JSON.stringify(updates),
         credentials: 'include',
       });
-      if (!response.ok) throw new Error('Update failed');
-      const userData = await response.json();
-      setUser(userData);
+      
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.error || 'Update failed');
+      }
+      
+      setUser(data);
+      setError(null);
     } catch (error) {
+      const errorMsg = error instanceof Error ? error.message : 'Profile update failed';
+      setError(errorMsg);
       console.error('Profile update failed:', error);
+      throw error;
     }
   };
+
+  const clearError = () => setError(null);
 
   return (
     <AuthContext.Provider
@@ -123,6 +167,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         signup,
         logout,
         updateUser,
+        error,
+        clearError,
       }}
     >
       {children}

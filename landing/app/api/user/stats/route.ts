@@ -1,16 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { authenticateRequest } from '@/lib/auth';
-
-interface UserStats {
-  sdksGenerated: number;
-  apiSpecsProcessed: number;
-  totalLanguages: number;
-  lastGeneratedAt?: Date;
-  creditsUsed: number;
-}
-
-// In-memory user stats storage (in production, store in database)
-const userStats: Map<string, UserStats> = new Map();
+import { getUserStats, updateUserStats, incrementSdkGenerated } from '@/lib/stats-storage';
 
 export async function GET(request: NextRequest) {
   try {
@@ -22,24 +12,15 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Get user stats or create default
-    let stats = userStats.get(auth.user.id);
-    if (!stats) {
-      stats = {
-        sdksGenerated: 0,
-        apiSpecsProcessed: 0,
-        totalLanguages: 0,
-        creditsUsed: 0,
-      };
-      userStats.set(auth.user.id, stats);
-    }
+    // Get user stats from persistent storage
+    const stats = await getUserStats(auth.user.id);
 
     return NextResponse.json(
       {
         user: auth.user.email,
         stats,
         plan: auth.user.plan,
-        creditsRemaining: auth.user.credits - stats.creditsUsed,
+        creditsRemaining: Math.max(0, auth.user.credits - stats.creditsUsed),
       },
       { status: 200 }
     );
@@ -62,37 +43,34 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { action, value } = await request.json();
+    const { action, isWeb3 } = await request.json();
 
-    let stats = userStats.get(auth.user.id);
-    if (!stats) {
-      stats = {
-        sdksGenerated: 0,
-        apiSpecsProcessed: 0,
-        totalLanguages: 0,
-        creditsUsed: 0,
-      };
-    }
-
+    let stats;
+    
     // Update stats based on action
     switch (action) {
       case 'sdk-generated':
-        stats.sdksGenerated += 1;
-        stats.creditsUsed += value || 10; // Default 10 credits per SDK
-        stats.lastGeneratedAt = new Date();
+        stats = await incrementSdkGenerated(auth.user.id, isWeb3 === true);
         break;
+      
       case 'spec-processed':
-        stats.apiSpecsProcessed += 1;
+        const currentStats = await getUserStats(auth.user.id);
+        stats = await updateUserStats(auth.user.id, {
+          apiSpecsProcessed: currentStats.apiSpecsProcessed + 1,
+        });
         break;
+      
       case 'language-added':
-        if (!value) break;
-        if (!stats.totalLanguages) stats.totalLanguages = 0;
-        const languages = value as string[];
-        stats.totalLanguages = Math.max(stats.totalLanguages, languages.length);
+        // Will be handled when SDK is generated
+        stats = await getUserStats(auth.user.id);
         break;
+      
+      default:
+        return NextResponse.json(
+          { error: 'Invalid action' },
+          { status: 400 }
+        );
     }
-
-    userStats.set(auth.user.id, stats);
 
     return NextResponse.json(
       {
