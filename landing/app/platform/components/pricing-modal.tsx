@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
+import { useWeb3 } from '../auth/web3-context';
 
 interface PricingModalProps {
   isOpen: boolean;
@@ -9,41 +10,49 @@ interface PricingModalProps {
   currentCredits?: number;
 }
 
-interface Plan {
+interface CreditPackage {
+  id: string;
   name: string;
-  price: number;
   credits: number;
-  description: string;
-  features: string[];
+  price: number;
+  pricePerCredit: number;
+  usdPrice?: number;
+  popular?: boolean;
 }
 
-const plans: Plan[] = [
+const creditPackages: CreditPackage[] = [
   {
-    name: 'Pro',
-    price: 29.99,
-    credits: 1000,
-    description: 'For active developers',
-    features: [
-      '1000 credits',
-      'Multi-language SDKs',
-      'Web3 integration',
-      'Priority support',
-      'Monthly renewal',
-    ],
+    id: 'starter',
+    name: 'Starter',
+    credits: 100,
+    price: 9.99,
+    usdPrice: 9.99,
+    pricePerCredit: 0.10,
   },
   {
-    name: 'Enterprise',
+    id: 'pro',
+    name: 'Professional',
+    credits: 500,
+    price: 39.99,
+    usdPrice: 39.99,
+    pricePerCredit: 0.08,
+    popular: true,
+  },
+  {
+    id: 'business',
+    name: 'Business',
+    credits: 1500,
     price: 99.99,
+    usdPrice: 99.99,
+    pricePerCredit: 0.067,
+  },
+  {
+    id: 'enterprise',
+    name: 'Enterprise',
     credits: 5000,
-    description: 'For production use',
-    features: [
-      '5000 credits',
-      'All Pro features',
-      'Dedicated support',
-      'Custom integrations',
-      'Webhook access',
-      'Monthly renewal',
-    ],
+    price: 299.99,
+    usdPrice: 299.99,
+    pricePerCredit: 0.06,
   },
 ];
 
@@ -52,14 +61,22 @@ export default function PricingModal({
   onClose,
   currentCredits = 0,
 }: PricingModalProps) {
+  const { address, isConnected, connectWallet } = useWeb3();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [selectedMethod, setSelectedMethod] = useState<'card' | 'mobile_money' | 'paj_cash'>('card');
+  const [selectedPackage, setSelectedPackage] = useState<string | null>(null);
+  const [paymentMethod, setPaymentMethod] = useState<'card' | 'wallet'>('card');
 
-  const handleUpgrade = async (planName: string) => {
+  const handlePurchaseWithCard = async (packageId: string) => {
     try {
       setLoading(true);
       setError(null);
+      setSelectedPackage(packageId);
+
+      const pkg = creditPackages.find(p => p.id === packageId);
+      if (!pkg) {
+        throw new Error('Invalid package selected');
+      }
 
       const response = await fetch('/api/payments/create', {
         method: 'POST',
@@ -67,8 +84,9 @@ export default function PricingModal({
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ 
-          plan: planName.toLowerCase(),
-          paymentMethod: selectedMethod 
+          packageId,
+          credits: pkg.credits,
+          amount: pkg.price,
         }),
       });
 
@@ -83,12 +101,73 @@ export default function PricingModal({
         throw new Error('Invalid payment session response');
       }
 
-      // Redirect to Paycrest checkout
+      // Redirect to payment gateway
       window.location.href = redirectUrl;
     } catch (err) {
-      console.error('Upgrade error:', err);
+      console.error('Purchase error:', err);
       setError(err instanceof Error ? err.message : 'An error occurred');
       setLoading(false);
+      setSelectedPackage(null);
+    }
+  };
+
+  const handlePurchaseWithWallet = async (packageId: string) => {
+    try {
+      setLoading(true);
+      setError(null);
+      setSelectedPackage(packageId);
+
+      // Connect wallet if not already connected
+      if (!isConnected) {
+        await connectWallet();
+      }
+
+      const pkg = creditPackages.find(p => p.id === packageId);
+      if (!pkg) {
+        throw new Error('Invalid package selected');
+      }
+
+      // Create payment intent with wallet
+      const response = await fetch('/api/payments/create-wallet', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          packageId,
+          credits: pkg.credits,
+          amount: pkg.usdPrice,
+          walletAddress: address,
+        }),
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || 'Failed to create wallet payment');
+      }
+
+      const { txHash, amount, message } = await response.json();
+
+      if (txHash) {
+        // Show success message
+        alert(`✅ Payment successful!\n\nTransaction: ${txHash}\n\nYour ${pkg.credits} credits will be added shortly.`);
+        onClose();
+      } else {
+        throw new Error(message || 'Payment processing failed');
+      }
+    } catch (err) {
+      console.error('Wallet payment error:', err);
+      setError(err instanceof Error ? err.message : 'Wallet payment failed');
+      setLoading(false);
+      setSelectedPackage(null);
+    }
+  };
+
+  const handlePurchase = (packageId: string) => {
+    if (paymentMethod === 'card') {
+      handlePurchaseWithCard(packageId);
+    } else {
+      handlePurchaseWithWallet(packageId);
     }
   };
 
@@ -100,142 +179,195 @@ export default function PricingModal({
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.95 }}
-        className="bg-white rounded-2xl max-w-2xl w-full max-h-90vh overflow-y-auto"
+        className="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto"
       >
         <div className="p-6 md:p-8">
           {/* Header */}
           <div className="flex justify-between items-center mb-8">
             <div>
-              <h2 className="text-3xl font-bold text-gray-900">Upgrade Plan</h2>
-              <p className="text-gray-600 mt-1">
-                Current credits: <span className="font-semibold text-green-600">{currentCredits}</span>
+              <h2 className="text-3xl font-bold text-gray-900 font-mono">Buy Credits</h2>
+              <p className="text-gray-600 mt-2 font-mono">
+                Current balance: <span className="font-semibold text-accent-green">{currentCredits.toLocaleString()} credits</span>
               </p>
             </div>
             <button
               onClick={onClose}
-              className="text-gray-400 hover:text-gray-600 text-2xl"
+              className="text-gray-400 hover:text-gray-600 text-2xl font-semibold"
             >
-              ×
+              ✕
             </button>
           </div>
 
           {/* Error Message */}
           {error && (
             <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-              <p className="text-red-700 text-sm">{error}</p>
+              <p className="text-red-700 text-sm font-mono">{error}</p>
             </div>
           )}
 
           {/* Payment Method Selection */}
           <div className="mb-8 p-4 border border-gray-200 rounded-lg bg-gray-50">
-            <label className="block text-sm font-semibold text-gray-700 mb-4">
+            <label className="block text-sm font-semibold text-gray-700 mb-3 font-mono">
               Payment Method
             </label>
-            <div className="space-y-3">
-              <label className="flex items-center p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-white transition-colors" style={{backgroundColor: selectedMethod === 'card' ? '#f0fdf4' : 'transparent', borderColor: selectedMethod === 'card' ? '#22c55e' : undefined}}>
+            <div className="grid grid-cols-2 gap-3">
+              <label 
+                className={`flex items-center p-4 border-2 rounded-lg cursor-pointer transition-all font-mono ${
+                  paymentMethod === 'card'
+                    ? 'border-accent-green bg-green-50'
+                    : 'border-gray-200 bg-white hover:border-gray-300'
+                }`}
+              >
                 <input
                   type="radio"
                   name="payment-method"
                   value="card"
-                  checked={selectedMethod === 'card'}
-                  onChange={(e) => setSelectedMethod(e.target.value as any)}
+                  checked={paymentMethod === 'card'}
+                  onChange={(e) => setPaymentMethod(e.target.value as 'card' | 'wallet')}
                   className="w-4 h-4"
                 />
                 <span className="ml-3">
-                  <span className="block font-semibold text-gray-900">Credit/Debit Card</span>
-                  <span className="text-xs text-gray-600">Visa, Mastercard, etc.</span>
-                </span>
-              </label>
-              
-              <label className="flex items-center p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-white transition-colors" style={{backgroundColor: selectedMethod === 'mobile_money' ? '#f0fdf4' : 'transparent', borderColor: selectedMethod === 'mobile_money' ? '#22c55e' : undefined}}>
-                <input
-                  type="radio"
-                  name="payment-method"
-                  value="mobile_money"
-                  checked={selectedMethod === 'mobile_money'}
-                  onChange={(e) => setSelectedMethod(e.target.value as any)}
-                  className="w-4 h-4"
-                />
-                <span className="ml-3">
-                  <span className="block font-semibold text-gray-900">Mobile Money</span>
-                  <span className="text-xs text-gray-600">Airtel, MTN, Vodafone, etc.</span>
+                  <span className="block font-semibold text-gray-900">💳 Credit Card</span>
+                  <span className="text-xs text-gray-600">Visa, Mastercard</span>
                 </span>
               </label>
 
-              <label className="flex items-center p-3 border border-green-300 rounded-lg cursor-pointer hover:bg-white transition-colors" style={{backgroundColor: selectedMethod === 'paj_cash' ? '#f0fdf4' : 'transparent', borderColor: selectedMethod === 'paj_cash' ? '#22c55e' : '#d1d5db'}}>
+              <label 
+                className={`flex items-center p-4 border-2 rounded-lg cursor-pointer transition-all font-mono ${
+                  paymentMethod === 'wallet'
+                    ? 'border-accent-green bg-green-50'
+                    : 'border-gray-200 bg-white hover:border-gray-300'
+                }`}
+              >
                 <input
                   type="radio"
                   name="payment-method"
-                  value="paj_cash"
-                  checked={selectedMethod === 'paj_cash'}
-                  onChange={(e) => setSelectedMethod(e.target.value as any)}
+                  value="wallet"
+                  checked={paymentMethod === 'wallet'}
+                  onChange={(e) => setPaymentMethod(e.target.value as 'card' | 'wallet')}
                   className="w-4 h-4"
                 />
                 <span className="ml-3">
-                  <span className="block font-semibold text-gray-900">Paj Cash</span>
-                  <span className="text-xs text-gray-600">Fast, secure digital wallet</span>
+                  <span className="block font-semibold text-gray-900">🔗 Wallet</span>
+                  <span className="text-xs text-gray-600">MetaMask, WalletConnect</span>
                 </span>
               </label>
             </div>
+
+            {/* Wallet Connection Status */}
+            {paymentMethod === 'wallet' && (
+              <div className="mt-4 p-3 bg-white border border-gray-200 rounded-lg">
+                {isConnected ? (
+                  <p className="text-sm font-mono text-green-700">
+                    ✓ Wallet connected: <span className="font-semibold">{address?.slice(0, 6)}...{address?.slice(-4)}</span>
+                  </p>
+                ) : (
+                  <p className="text-sm font-mono text-gray-600">
+                    💡 Your wallet will connect when you click "Get Credits"
+                  </p>
+                )}
+              </div>
+            )}
+          </div>
           </div>
 
-          {/* Plans Grid */}
-          <div className="grid md:grid-cols-2 gap-6 mb-8">
-            {plans.map((plan) => (
+          {/* Credit Packages Grid */}
+          <div className="grid md:grid-cols-4 gap-4 mb-8">
+            {creditPackages.map((pkg) => (
               <motion.div
-                key={plan.name}
+                key={pkg.id}
                 whileHover={{ translateY: -4 }}
-                className="border-2 border-gray-200 rounded-xl p-6 hover:border-green-500 transition-colors"
+                onClick={() => !loading && handlePurchase(pkg.id)}
+                className={`rounded-xl p-5 cursor-pointer transition-all border-2 ${
+                  pkg.popular
+                    ? 'border-accent-green bg-green-50 ring-2 ring-accent-green'
+                    : 'border-gray-200 bg-white hover:border-accent-green'
+                } ${loading && selectedPackage !== pkg.id ? 'opacity-60' : ''}`}
               >
-                <h3 className="text-2xl font-bold text-gray-900 mb-2">
-                  {plan.name}
+                {pkg.popular && (
+                  <div className="mb-3 inline-block px-3 py-1 bg-accent-green text-white text-xs font-bold rounded-full font-mono">
+                    POPULAR
+                  </div>
+                )}
+                
+                <h3 className="text-lg font-bold text-gray-900 mb-1 font-mono">
+                  {pkg.name}
                 </h3>
-                <p className="text-gray-600 text-sm mb-4">{plan.description}</p>
-
-                {/* Price */}
-                <div className="mb-4">
-                  <span className="text-4xl font-bold text-gray-900">
-                    ${plan.price}
+                
+                <div className="mb-3">
+                  <span className="text-3xl font-bold text-gray-900 font-mono">
+                    {pkg.credits}
                   </span>
-                  <span className="text-gray-600 ml-2">/month</span>
+                  <span className="text-gray-600 text-sm"> credits</span>
                 </div>
 
-                {/* Credits */}
-                <div className="bg-green-50 rounded-lg p-3 mb-6 text-center">
-                  <p className="text-green-700 font-semibold">
-                    {plan.credits.toLocaleString()} Credits
+                <div className="mb-4 p-3 bg-white rounded-lg border border-gray-200">
+                  <p className="text-gray-600 text-xs font-mono">Price</p>
+                  <p className="text-xl font-bold text-accent-green font-mono">
+                    ${pkg.price.toFixed(2)}
+                  </p>
+                  <p className="text-xs text-gray-600 font-mono mt-1">
+                    ${pkg.pricePerCredit.toFixed(3)}/credit
                   </p>
                 </div>
 
-                {/* Features */}
-                <ul className="space-y-3 mb-6">
-                  {plan.features.map((feature, idx) => (
-                    <li key={idx} className="flex items-start gap-3">
-                      <span className="text-green-600 mt-1">✓</span>
-                      <span className="text-gray-700 text-sm">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
-
-                {/* Button */}
                 <button
-                  onClick={() => handleUpgrade(plan.name)}
-                  disabled={loading}
-                  className="w-full bg-gradient-to-r from-green-600 to-green-700 text-white py-2 rounded-lg font-semibold hover:from-green-700 hover:to-green-800 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  onClick={() => handlePurchase(pkg.id)}
+                  disabled={loading && selectedPackage === pkg.id}
+                  className={`w-full py-2 px-4 rounded-lg font-semibold text-sm font-mono transition-all ${
+                    pkg.popular
+                      ? 'bg-accent-green text-white hover:bg-accent-green-dark disabled:opacity-50'
+                      : 'bg-gray-100 text-gray-900 hover:bg-gray-200 disabled:opacity-50'
+                  }`}
                 >
-                  {loading ? 'Processing...' : 'Upgrade Now'}
+                  {loading && selectedPackage === pkg.id 
+                    ? 'Processing...' 
+                    : paymentMethod === 'wallet'
+                      ? `${isConnected ? '🔗' : '🔗'} Get ${pkg.credits}`
+                      : `💳 Get ${pkg.credits}`
+                  }
                 </button>
               </motion.div>
             ))}
           </div>
 
-          {/* Footer Info */}
-          <div className="text-center text-gray-600 text-sm">
-            <p>
-              Credits are added to your account upon payment completion.
-            </p>
-            <p className="mt-2">
-              Powered by <span className="font-semibold">Paycrest</span>
+          {/* Features Info */}
+          <div className="grid md:grid-cols-2 gap-4 mb-8">
+            <div className="p-4 border border-gray-200 rounded-lg">
+              <h4 className="font-bold text-gray-900 mb-2 font-mono">What You Get</h4>
+              <ul className="space-y-2 text-sm text-gray-700 font-mono">
+                <li>✓ Generate unlimited SDKs (1 credit per generation)</li>
+                <li>✓ Support for 8+ programming languages</li>
+                <li>✓ Web3 smart contract & REST API support</li>
+                <li>✓ Multi-chain deployment (Ethereum, Polygon, etc.)</li>
+              </ul>
+            </div>
+            <div className="p-4 border border-gray-200 rounded-lg">
+              <h4 className="font-bold text-gray-900 mb-2 font-mono">
+                {paymentMethod === 'wallet' ? '🔗 Wallet Payment' : '💳 Card Payment'}
+              </h4>
+              {paymentMethod === 'wallet' ? (
+                <ul className="space-y-2 text-sm text-gray-700 font-mono">
+                  <li>✓ MetaMask & WalletConnect support</li>
+                  <li>✓ Direct blockchain transaction</li>
+                  <li>✓ Instant credit delivery</li>
+                  <li>✓ Gas fees apply (depends on network)</li>
+                </ul>
+              ) : (
+                <ul className="space-y-2 text-sm text-gray-700 font-mono">
+                  <li>✓ Visa, Mastercard accepted</li>
+                  <li>✓ Secure payment processing</li>
+                  <li>✓ Instant credit delivery</li>
+                  <li>✓ Invoice for every purchase</li>
+                </ul>
+              )}
+            </div>
+          </div>
+
+          {/* Footer */}
+          <div className="text-center pt-4 border-t border-gray-200">
+            <p className="text-gray-600 text-sm font-mono">
+              Need custom pricing? <span className="text-accent-green font-semibold cursor-pointer hover:underline">Contact us</span>
             </p>
           </div>
         </div>
