@@ -9,10 +9,10 @@ import { createLogger } from "./logger";
 import { parseArguments, parseConfig } from "./argument-parser";
 
 export class CLIApplication {
-  private args: string[];
-  private logger: any;
-  private progress: any;
-  private api: any;
+  private readonly args: string[];
+  private readonly logger: any;
+  private readonly progress: any;
+  private readonly api: any;
 
   constructor(argv?: string[]) {
     this.args = argv || process.argv.slice(2);
@@ -23,57 +23,52 @@ export class CLIApplication {
 
   /**
    * Main CLI entry point
+   * Does not include try-catch; errors are handled globally by bootstrap
    */
   async run(): Promise<void> {
-    try {
-      const { command, options } = parseArguments(this.args);
+    const { command, options } = parseArguments(this.args);
 
-      // Configure logging based on options
-      this.logger.configure({
-        level: options.verbose ? "debug" : options.quiet ? "error" : "info",
-        colorize: options.color !== false,
-        format: options.json ? "json" : "text",
-      });
+    // Configure logging based on options
+    this.logger.configure({
+      level: options.verbose ? "debug" : options.quiet ? "error" : "info",
+      colorize: options.color !== false,
+      format: options.json ? "json" : "text",
+    });
 
-      // Route to appropriate command handler
-      switch (command) {
-        case "generate":
-          await this.handleGenerate(options);
-          break;
-        case "validate":
-          await this.handleValidate(options);
-          break;
-        case "test":
-          await this.handleTest(options);
-          break;
-        case "lint":
-          await this.handleLint(options);
-          break;
-        case "config":
-          await this.handleConfig(options);
-          break;
-        case "completion":
-          await this.handleCompletion(options);
-          break;
-        case "version":
-        case "-v":
-        case "--version":
-          this.handleVersion();
-          break;
-        case "help":
-        case "-h":
-        case "--help":
-        case undefined:
-          this.handleHelp(options.command);
-          break;
-        default:
-          this.logger.error(`Unknown command: ${command}`);
-          process.exit(2);
-      }
-
-      process.exit(0);
-    } catch (error) {
-      this.handleError(error);
+    // Route to appropriate command handler
+    switch (command) {
+      case "generate":
+        await this.handleGenerate(options);
+        break;
+      case "validate":
+        await this.handleValidate(options);
+        break;
+      case "test":
+        await this.handleTest(options);
+        break;
+      case "lint":
+        await this.handleLint(options);
+        break;
+      case "config":
+        await this.handleConfig(options);
+        break;
+      case "completion":
+        await this.handleCompletion(options);
+        break;
+      case "version":
+      case "-v":
+      case "--version":
+        this.handleVersion();
+        break;
+      case "help":
+      case "-h":
+      case "--help":
+      case undefined:
+        this.handleHelp(options.command);
+        break;
+      default:
+        this.logger.error(`Unknown command: ${command}`);
+        process.exit(2);
     }
   }
 
@@ -470,43 +465,4 @@ Documentation: https://docs.fost.dev/cli
       `);
     }
   }
-
-  /**
-   * Handle errors
-   */
-  private handleError(error: any): void {
-    if (error.code === "ERR_INVALID_ARG_VALUE") {
-      this.logger.error(`Invalid argument: ${error.message}`);
-      process.exit(2);
-    }
-
-    if (error.code === "ENOENT") {
-      this.logger.error(`File not found: ${error.path}`);
-      process.exit(5);
-    }
-
-    if (error.code === "EACCES") {
-      this.logger.error(`Permission denied: ${error.path}`);
-      process.exit(5);
-    }
-
-    this.logger.error(`${error.message}`);
-    process.exit(1);
-  }
-}
-
-/**
- * CLI Entry point
- */
-export async function runCLI(argv?: string[]): Promise<void> {
-  const cli = new CLIApplication(argv);
-  await cli.run();
-}
-
-// Execute if run directly
-if (require.main === module) {
-  runCLI().catch((error) => {
-    console.error(error);
-    process.exit(1);
-  });
 }

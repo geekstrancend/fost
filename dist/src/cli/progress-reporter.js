@@ -6,9 +6,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createProgressReporter = createProgressReporter;
 function createProgressReporter() {
-    const spinnerFrames = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"];
+    const spinnerFrames = ["|", "/", "-", "\\"];
     let currentFrame = 0;
-    let interval;
     let isRunning = false;
     return {
         start() {
@@ -27,17 +26,17 @@ function createProgressReporter() {
         succeed(message) {
             isRunning = false;
             clearLine();
-            console.log(`\n OK ${message}`);
+            console.log(`\n [OK] ${message}`);
         },
         fail() {
             isRunning = false;
             clearLine();
-            console.log(`\n FAILED`);
+            console.log(`\n [FAILED]`);
         },
         warn(message) {
             isRunning = false;
             clearLine();
-            console.log(`\n WARNING ${message}`);
+            console.log(`\n [WARNING] ${message}`);
         },
     };
 }

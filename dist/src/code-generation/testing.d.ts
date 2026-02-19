@@ -63,11 +63,10 @@ export interface SimulationState {
     contractState: Map<string, unknown>;
 }
 declare class MockAPITester {
-    private baseURL;
     private methods;
     private mockResponses;
     private requestHistory;
-    constructor(baseURL: string, methods: SDKMethod[]);
+    constructor(_baseURL: string, methods: SDKMethod[]);
     generateTestSuite(): TestSuite;
     private createSuccessTest;
     private createErrorTest;

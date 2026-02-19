@@ -16,9 +16,6 @@
 import {
   CanonicalOperation,
   OperationParameter,
-  CanonicalType,
-  CanonicalField,
-  FieldValidation,
 } from "./CANONICAL_SCHEMA";
 
 // ============================================================================

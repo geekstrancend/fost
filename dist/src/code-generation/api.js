@@ -5,7 +5,7 @@
  * Exports the complete code generation system for SDK production.
  */
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.GENERATED_SDK_USAGE_EXAMPLE = exports.STRIPE_SDK_DESIGN_PLAN = exports.generateStripeSDK = exports.SDKCodeGenerator = exports.TypeDefinitionBuilder = exports.MethodBuilder = exports.ConfigurationBuilder = exports.ErrorTypeBuilder = exports.ClientClassBuilder = exports.DEFAULT_EMITTER_OPTIONS = exports.CodeBuilder = exports.TypeScriptEmitter = void 0;
+exports.SDKCodeGenerator = exports.TypeDefinitionBuilder = exports.MethodBuilder = exports.ConfigurationBuilder = exports.ErrorTypeBuilder = exports.ClientClassBuilder = exports.DEFAULT_EMITTER_OPTIONS = exports.CodeBuilder = exports.TypeScriptEmitter = void 0;
 // Code emitter
 var emitter_1 = require("./emitter");
 Object.defineProperty(exports, "TypeScriptEmitter", { enumerable: true, get: function () { return emitter_1.TypeScriptEmitter; } });
@@ -21,9 +21,4 @@ Object.defineProperty(exports, "TypeDefinitionBuilder", { enumerable: true, get:
 // Main generator
 var index_1 = require("./index");
 Object.defineProperty(exports, "SDKCodeGenerator", { enumerable: true, get: function () { return index_1.SDKCodeGenerator; } });
-// Examples
-var examples_1 = require("./examples");
-Object.defineProperty(exports, "generateStripeSDK", { enumerable: true, get: function () { return examples_1.generateStripeSDK; } });
-Object.defineProperty(exports, "STRIPE_SDK_DESIGN_PLAN", { enumerable: true, get: function () { return examples_1.STRIPE_SDK_DESIGN_PLAN; } });
-Object.defineProperty(exports, "GENERATED_SDK_USAGE_EXAMPLE", { enumerable: true, get: function () { return examples_1.GENERATED_SDK_USAGE_EXAMPLE; } });
 //# sourceMappingURL=api.js.map

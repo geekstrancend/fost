@@ -3,13 +3,14 @@
  * Handles command parsing, execution, and output formatting
  */
 export declare class CLIApplication {
-    private args;
-    private logger;
-    private progress;
-    private api;
+    private readonly args;
+    private readonly logger;
+    private readonly progress;
+    private readonly api;
     constructor(argv?: string[]);
     /**
      * Main CLI entry point
+     * Does not include try-catch; errors are handled globally by bootstrap
      */
     run(): Promise<void>;
     /**
@@ -44,13 +45,5 @@ export declare class CLIApplication {
      * Handle help command
      */
     private handleHelp;
-    /**
-     * Handle errors
-     */
-    private handleError;
 }
-/**
- * CLI Entry point
- */
-export declare function runCLI(argv?: string[]): Promise<void>;
 //# sourceMappingURL=index.d.ts.map

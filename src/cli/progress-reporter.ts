@@ -12,9 +12,8 @@ export interface ProgressReporter {
 }
 
 export function createProgressReporter(): ProgressReporter {
-  const spinnerFrames = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"];
+  const spinnerFrames = ["|", "/", "-", "\\"];
   let currentFrame = 0;
-  let interval: any;
   let isRunning = false;
 
   return {
@@ -39,19 +38,19 @@ export function createProgressReporter(): ProgressReporter {
     succeed(message: string): void {
       isRunning = false;
       clearLine();
-      console.log(`\n OK ${message}`);
+      console.log(`\n [OK] ${message}`);
     },
 
     fail(): void {
       isRunning = false;
       clearLine();
-      console.log(`\n FAILED`);
+      console.log(`\n [FAILED]`);
     },
 
     warn(message: string): void {
       isRunning = false;
       clearLine();
-      console.log(`\n WARNING ${message}`);
+      console.log(`\n [WARNING] ${message}`);
     },
   };
 }

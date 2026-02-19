@@ -147,16 +147,16 @@ export declare function createGeneratorAPI(): GeneratorAPI;
 export declare class GeneratorService implements GeneratorAPI {
     private config;
     generate(config: GenerationConfig): Promise<GenerationResult>;
-    validate(config: ValidationConfig): Promise<ValidationResult>;
-    analyzeInput(config: AnalysisConfig): Promise<InputAnalysis>;
-    generateTests(config: TestGenerationConfig): Promise<void>;
-    generateDocumentation(config: DocumentationConfig): Promise<void>;
-    validateGeneration(config: GenerationValidationConfig): Promise<GenerationValidationResult>;
-    runTests(config: TestConfig): Promise<TestResult>;
-    lintCode(config: LintConfig): Promise<LintResult>;
+    validate(_config: ValidationConfig): Promise<ValidationResult>;
+    analyzeInput(_config: AnalysisConfig): Promise<InputAnalysis>;
+    generateTests(_config: TestGenerationConfig): Promise<void>;
+    generateDocumentation(_config: DocumentationConfig): Promise<void>;
+    validateGeneration(_config: GenerationValidationConfig): Promise<GenerationValidationResult>;
+    runTests(_config: TestConfig): Promise<TestResult>;
+    lintCode(_config: LintConfig): Promise<LintResult>;
     getConfig(): Promise<any>;
-    setConfig(key: string, value: any): Promise<void>;
+    setConfig(_key: string, _value: any): Promise<void>;
     resetConfig(): Promise<void>;
-    getCompletion(shell: string): Promise<string>;
+    getCompletion(_shell: string): Promise<string>;
 }
 //# sourceMappingURL=generator-api.d.ts.map

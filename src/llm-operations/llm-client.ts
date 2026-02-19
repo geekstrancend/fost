@@ -36,7 +36,7 @@ export class LLMClient {
    * Call LLM with prompt
    */
   async call(options: LLMCallOptions): Promise<string> {
-    const { prompt, input, context } = options;
+    const { prompt, input } = options;
 
     // Build user message from template
     const userMessage = this.buildUserMessage(prompt.userPromptTemplate, input);
@@ -70,7 +70,7 @@ export class LLMClient {
   /**
    * Call OpenAI API (stub)
    */
-  private async callOpenAI(prompt: PromptVersion, userMessage: string): Promise<string> {
+  private async callOpenAI(prompt: PromptVersion, _userMessage: string): Promise<string> {
     // This would be implemented with actual OpenAI SDK
     // For now, return stub
     if (this.config.enableLogging) {
@@ -83,7 +83,7 @@ export class LLMClient {
   /**
    * Call Anthropic API (stub)
    */
-  private async callAnthropic(prompt: PromptVersion, userMessage: string): Promise<string> {
+  private async callAnthropic(prompt: PromptVersion, _userMessage: string): Promise<string> {
     // This would be implemented with actual Anthropic SDK
     // For now, return stub
     if (this.config.enableLogging) {

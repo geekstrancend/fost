@@ -136,7 +136,7 @@ class OutputValidator {
     /**
      * Check if actual type matches expected type
      */
-    typeMatches(actualType, value, expectedType) {
+    typeMatches(_actualType, value, expectedType) {
         switch (expectedType) {
             case 'string':
                 return typeof value === 'string';

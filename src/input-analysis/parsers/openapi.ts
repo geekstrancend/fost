@@ -246,7 +246,7 @@ export class OpenAPIParser extends BaseParser {
     return normalized;
   }
 
-  private extractOperations(openapi: any, types: Record<string, NormalizedType>): NormalizedOperation[] {
+  private extractOperations(openapi: any, _types: Record<string, NormalizedType>): NormalizedOperation[] {
     const operations: NormalizedOperation[] = [];
     const paths = openapi.paths || {};
 

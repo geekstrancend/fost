@@ -1,7 +1,5 @@
 // Fallback Strategy - Multi-tier fallback system for failed LLM calls
 
-import { PromptVersion } from './prompt-registry';
-
 export type FallbackTier = 'tier1' | 'tier2' | 'tier3' | 'tier4';
 
 export interface FallbackOption {

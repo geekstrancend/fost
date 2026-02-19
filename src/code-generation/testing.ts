@@ -73,13 +73,11 @@ export interface SimulationState {
 }
 
 class MockAPITester {
-  private baseURL: string;
   private methods: Map<string, SDKMethod>;
   private mockResponses: Map<string, MockResponse[]>;
   private requestHistory: MockRequest[] = [];
 
-  constructor(baseURL: string, methods: SDKMethod[]) {
-    this.baseURL = baseURL;
+  constructor(_baseURL: string, methods: SDKMethod[]) {
     this.methods = new Map(methods.map(m => [m.name, m]));
     this.mockResponses = this.initializeMockResponses();
   }

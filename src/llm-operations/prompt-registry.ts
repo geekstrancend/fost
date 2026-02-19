@@ -1,7 +1,6 @@
 // Prompt Registry - Manages all prompt versions with versioning and lifecycle
 
 import * as fs from 'fs';
-import * as path from 'path';
 
 export interface PromptVersion {
   id: string;
@@ -195,7 +194,7 @@ export class PromptRegistry {
   import(data: Record<string, PromptVersion[]>): void {
     this.prompts.clear();
 
-    for (const [id, versions] of Object.entries(data)) {
+    for (const [_id, versions] of Object.entries(data)) {
       for (const version of versions) {
         this.register(version);
       }

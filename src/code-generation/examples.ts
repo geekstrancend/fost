@@ -4,8 +4,6 @@
  * This module contains example implementations and usage patterns.
  */
 
-import { SDKCodeGenerator } from "../code-generation";
-
 /**
  * Run examples
  */

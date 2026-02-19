@@ -7,5 +7,4 @@ export type { SDKDesignPlan, SDKMethod, MethodParameter, SDKTypeDefinition, SDKE
 export { TypeScriptEmitter, CodeBuilder, EmitterOptions, DEFAULT_EMITTER_OPTIONS } from "./emitter";
 export { ClientClassBuilder, ErrorTypeBuilder, ConfigurationBuilder, MethodBuilder, TypeDefinitionBuilder, } from "./generators";
 export { SDKCodeGenerator, GenerationResult, GeneratedFile } from "./index";
-export { generateStripeSDK, STRIPE_SDK_DESIGN_PLAN, GENERATED_SDK_USAGE_EXAMPLE } from "./examples";
 //# sourceMappingURL=api.d.ts.map

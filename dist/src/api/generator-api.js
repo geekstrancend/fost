@@ -36,7 +36,7 @@ function createGeneratorAPI() {
                 },
             };
         },
-        async analyzeInput(config) {
+        async analyzeInput(_config) {
             // Implementation would analyze input and return metrics
             return {
                 methods: 42,
@@ -49,13 +49,13 @@ function createGeneratorAPI() {
                 complexity: "medium",
             };
         },
-        async generateTests(config) {
+        async generateTests(_config) {
             // Implementation would generate test files
         },
-        async generateDocumentation(config) {
+        async generateDocumentation(_config) {
             // Implementation would generate documentation files
         },
-        async validateGeneration(config) {
+        async validateGeneration(_config) {
             // Implementation would validate generated code
             return {
                 valid: true,
@@ -63,7 +63,7 @@ function createGeneratorAPI() {
                 warnings: [],
             };
         },
-        async runTests(config) {
+        async runTests(_config) {
             // Implementation would run tests
             return {
                 allPassed: true,
@@ -76,7 +76,7 @@ function createGeneratorAPI() {
                 failures: [],
             };
         },
-        async lintCode(config) {
+        async lintCode(_config) {
             // Implementation would lint code
             return {
                 issues: [],
@@ -92,15 +92,15 @@ function createGeneratorAPI() {
                 defaultOutput: "./sdk",
             };
         },
-        async setConfig(key, value) {
+        async setConfig(_key, _value) {
             // Implementation would set configuration value
         },
         async resetConfig() {
             // Implementation would reset to defaults
         },
-        async getCompletion(shell) {
-            // Implementation would return shell completion script
-            return `# Completion for ${shell}`;
+        async getCompletion(_shell) {
+            // Implementation would generate completion script
+            return `# Fost completion script\n# Add to your shell config`;
         },
     };
 }
@@ -140,7 +140,7 @@ class GeneratorService {
             throw new Error(`SDK generation failed: ${error instanceof Error ? error.message : String(error)}`);
         }
     }
-    async validate(config) {
+    async validate(_config) {
         // Validation logic - parses and validates input specifications
         try {
             return {
@@ -153,7 +153,7 @@ class GeneratorService {
             throw new Error(`Validation failed: ${error instanceof Error ? error.message : String(error)}`);
         }
     }
-    async analyzeInput(config) {
+    async analyzeInput(_config) {
         // Analysis logic - extracts metadata from input specification
         try {
             return {
@@ -167,7 +167,7 @@ class GeneratorService {
             throw new Error(`Analysis failed: ${error instanceof Error ? error.message : String(error)}`);
         }
     }
-    async generateTests(config) {
+    async generateTests(_config) {
         // Test generation logic - creates test suites for generated SDK
         try {
             // Implementation pending
@@ -177,7 +177,7 @@ class GeneratorService {
             throw new Error(`Test generation failed: ${error instanceof Error ? error.message : String(error)}`);
         }
     }
-    async generateDocumentation(config) {
+    async generateDocumentation(_config) {
         // Documentation generation logic - creates docs from SDK analysis
         try {
             // Implementation pending
@@ -187,7 +187,7 @@ class GeneratorService {
             throw new Error(`Documentation generation failed: ${error instanceof Error ? error.message : String(error)}`);
         }
     }
-    async validateGeneration(config) {
+    async validateGeneration(_config) {
         // Validates generated code for correctness and best practices
         try {
             return {
@@ -200,7 +200,7 @@ class GeneratorService {
             throw new Error(`Generation validation failed: ${error instanceof Error ? error.message : String(error)}`);
         }
     }
-    async runTests(config) {
+    async runTests(_config) {
         // Test runner logic - executes test suite
         try {
             return {
@@ -218,7 +218,7 @@ class GeneratorService {
             throw new Error(`Test execution failed: ${error instanceof Error ? error.message : String(error)}`);
         }
     }
-    async lintCode(config) {
+    async lintCode(_config) {
         // Linting logic - checks generated code for quality issues
         try {
             return {
@@ -234,16 +234,16 @@ class GeneratorService {
     async getConfig() {
         return this.config;
     }
-    async setConfig(key, value) {
-        this.config[key] = value;
+    async setConfig(_key, _value) {
+        this.config[_key] = _value;
     }
     async resetConfig() {
         this.config = {};
     }
-    async getCompletion(shell) {
+    async getCompletion(_shell) {
         // Shell completion generator - creates completion scripts for bash, zsh, etc
         try {
-            return `# Completion for ${shell}`;
+            return `# Completion for shell`;
         }
         catch (error) {
             throw new Error(`Completion generation failed: ${error instanceof Error ? error.message : String(error)}`);

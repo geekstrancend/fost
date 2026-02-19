@@ -160,7 +160,7 @@ class PromptRegistry {
      */
     import(data) {
         this.prompts.clear();
-        for (const [id, versions] of Object.entries(data)) {
+        for (const [_id, versions] of Object.entries(data)) {
             for (const version of versions) {
                 this.register(version);
             }

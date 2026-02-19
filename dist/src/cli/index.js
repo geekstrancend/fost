@@ -5,7 +5,6 @@
  */
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.CLIApplication = void 0;
-exports.runCLI = runCLI;
 const generator_api_1 = require("../api/generator-api");
 const progress_reporter_1 = require("./progress-reporter");
 const logger_1 = require("./logger");
@@ -19,55 +18,50 @@ class CLIApplication {
     }
     /**
      * Main CLI entry point
+     * Does not include try-catch; errors are handled globally by bootstrap
      */
     async run() {
-        try {
-            const { command, options } = (0, argument_parser_1.parseArguments)(this.args);
-            // Configure logging based on options
-            this.logger.configure({
-                level: options.verbose ? "debug" : options.quiet ? "error" : "info",
-                colorize: options.color !== false,
-                format: options.json ? "json" : "text",
-            });
-            // Route to appropriate command handler
-            switch (command) {
-                case "generate":
-                    await this.handleGenerate(options);
-                    break;
-                case "validate":
-                    await this.handleValidate(options);
-                    break;
-                case "test":
-                    await this.handleTest(options);
-                    break;
-                case "lint":
-                    await this.handleLint(options);
-                    break;
-                case "config":
-                    await this.handleConfig(options);
-                    break;
-                case "completion":
-                    await this.handleCompletion(options);
-                    break;
-                case "version":
-                case "-v":
-                case "--version":
-                    this.handleVersion();
-                    break;
-                case "help":
-                case "-h":
-                case "--help":
-                case undefined:
-                    this.handleHelp(options.command);
-                    break;
-                default:
-                    this.logger.error(`Unknown command: ${command}`);
-                    process.exit(2);
-            }
-            process.exit(0);
-        }
-        catch (error) {
-            this.handleError(error);
+        const { command, options } = (0, argument_parser_1.parseArguments)(this.args);
+        // Configure logging based on options
+        this.logger.configure({
+            level: options.verbose ? "debug" : options.quiet ? "error" : "info",
+            colorize: options.color !== false,
+            format: options.json ? "json" : "text",
+        });
+        // Route to appropriate command handler
+        switch (command) {
+            case "generate":
+                await this.handleGenerate(options);
+                break;
+            case "validate":
+                await this.handleValidate(options);
+                break;
+            case "test":
+                await this.handleTest(options);
+                break;
+            case "lint":
+                await this.handleLint(options);
+                break;
+            case "config":
+                await this.handleConfig(options);
+                break;
+            case "completion":
+                await this.handleCompletion(options);
+                break;
+            case "version":
+            case "-v":
+            case "--version":
+                this.handleVersion();
+                break;
+            case "help":
+            case "-h":
+            case "--help":
+            case undefined:
+                this.handleHelp(options.command);
+                break;
+            default:
+                this.logger.error(`Unknown command: ${command}`);
+                process.exit(2);
         }
     }
     /**
@@ -420,39 +414,6 @@ Documentation: https://docs.fost.dev/cli
       `);
         }
     }
-    /**
-     * Handle errors
-     */
-    handleError(error) {
-        if (error.code === "ERR_INVALID_ARG_VALUE") {
-            this.logger.error(`Invalid argument: ${error.message}`);
-            process.exit(2);
-        }
-        if (error.code === "ENOENT") {
-            this.logger.error(`File not found: ${error.path}`);
-            process.exit(5);
-        }
-        if (error.code === "EACCES") {
-            this.logger.error(`Permission denied: ${error.path}`);
-            process.exit(5);
-        }
-        this.logger.error(`${error.message}`);
-        process.exit(1);
-    }
 }
 exports.CLIApplication = CLIApplication;
-/**
- * CLI Entry point
- */
-async function runCLI(argv) {
-    const cli = new CLIApplication(argv);
-    await cli.run();
-}
-// Execute if run directly
-if (require.main === module) {
-    runCLI().catch((error) => {
-        console.error(error);
-        process.exit(1);
-    });
-}
 //# sourceMappingURL=index.js.map

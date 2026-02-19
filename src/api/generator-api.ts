@@ -4,7 +4,7 @@
  * Can be used in CLI, scripts, or integrated with other tools
  */
 
-import { SDKDesignPlan, SDKMethod } from "../code-generation/types";
+
 
 export interface GeneratorAPI {
   // Core generation
@@ -203,7 +203,7 @@ export function createGeneratorAPI(): GeneratorAPI {
       };
     },
 
-    async analyzeInput(config: AnalysisConfig): Promise<InputAnalysis> {
+    async analyzeInput(_config: AnalysisConfig): Promise<InputAnalysis> {
       // Implementation would analyze input and return metrics
       return {
         methods: 42,
@@ -217,16 +217,16 @@ export function createGeneratorAPI(): GeneratorAPI {
       };
     },
 
-    async generateTests(config: TestGenerationConfig): Promise<void> {
+    async generateTests(_config: TestGenerationConfig): Promise<void> {
       // Implementation would generate test files
     },
 
-    async generateDocumentation(config: DocumentationConfig): Promise<void> {
+    async generateDocumentation(_config: DocumentationConfig): Promise<void> {
       // Implementation would generate documentation files
     },
 
     async validateGeneration(
-      config: GenerationValidationConfig
+      _config: GenerationValidationConfig
     ): Promise<GenerationValidationResult> {
       // Implementation would validate generated code
       return {
@@ -236,7 +236,7 @@ export function createGeneratorAPI(): GeneratorAPI {
       };
     },
 
-    async runTests(config: TestConfig): Promise<TestResult> {
+    async runTests(_config: TestConfig): Promise<TestResult> {
       // Implementation would run tests
       return {
         allPassed: true,
@@ -250,7 +250,7 @@ export function createGeneratorAPI(): GeneratorAPI {
       };
     },
 
-    async lintCode(config: LintConfig): Promise<LintResult> {
+    async lintCode(_config: LintConfig): Promise<LintResult> {
       // Implementation would lint code
       return {
         issues: [],
@@ -268,7 +268,7 @@ export function createGeneratorAPI(): GeneratorAPI {
       };
     },
 
-    async setConfig(key: string, value: any): Promise<void> {
+    async setConfig(_key: string, _value: any): Promise<void> {
       // Implementation would set configuration value
     },
 
@@ -276,9 +276,9 @@ export function createGeneratorAPI(): GeneratorAPI {
       // Implementation would reset to defaults
     },
 
-    async getCompletion(shell: string): Promise<string> {
-      // Implementation would return shell completion script
-      return `# Completion for ${shell}`;
+    async getCompletion(_shell: string): Promise<string> {
+      // Implementation would generate completion script
+      return `# Fost completion script\n# Add to your shell config`;
     },
   };
 }
@@ -321,7 +321,7 @@ export class GeneratorService implements GeneratorAPI {
     }
   }
 
-  async validate(config: ValidationConfig): Promise<ValidationResult> {
+  async validate(_config: ValidationConfig): Promise<ValidationResult> {
     // Validation logic - parses and validates input specifications
     try {
       return {
@@ -334,7 +334,7 @@ export class GeneratorService implements GeneratorAPI {
     }
   }
 
-  async analyzeInput(config: AnalysisConfig): Promise<InputAnalysis> {
+  async analyzeInput(_config: AnalysisConfig): Promise<InputAnalysis> {
     // Analysis logic - extracts metadata from input specification
     try {
       return {
@@ -348,7 +348,7 @@ export class GeneratorService implements GeneratorAPI {
     }
   }
 
-  async generateTests(config: TestGenerationConfig): Promise<void> {
+  async generateTests(_config: TestGenerationConfig): Promise<void> {
     // Test generation logic - creates test suites for generated SDK
     try {
       // Implementation pending
@@ -358,7 +358,7 @@ export class GeneratorService implements GeneratorAPI {
     }
   }
 
-  async generateDocumentation(config: DocumentationConfig): Promise<void> {
+  async generateDocumentation(_config: DocumentationConfig): Promise<void> {
     // Documentation generation logic - creates docs from SDK analysis
     try {
       // Implementation pending
@@ -369,7 +369,7 @@ export class GeneratorService implements GeneratorAPI {
   }
 
   async validateGeneration(
-    config: GenerationValidationConfig
+    _config: GenerationValidationConfig
   ): Promise<GenerationValidationResult> {
     // Validates generated code for correctness and best practices
     try {
@@ -383,7 +383,7 @@ export class GeneratorService implements GeneratorAPI {
     }
   }
 
-  async runTests(config: TestConfig): Promise<TestResult> {
+  async runTests(_config: TestConfig): Promise<TestResult> {
     // Test runner logic - executes test suite
     try {
       return {
@@ -401,7 +401,7 @@ export class GeneratorService implements GeneratorAPI {
     }
   }
 
-  async lintCode(config: LintConfig): Promise<LintResult> {
+  async lintCode(_config: LintConfig): Promise<LintResult> {
     // Linting logic - checks generated code for quality issues
     try {
       return {
@@ -418,18 +418,18 @@ export class GeneratorService implements GeneratorAPI {
     return this.config;
   }
 
-  async setConfig(key: string, value: any): Promise<void> {
-    this.config[key] = value;
+  async setConfig(_key: string, _value: any): Promise<void> {
+    this.config[_key] = _value;
   }
 
   async resetConfig(): Promise<void> {
     this.config = {};
   }
 
-  async getCompletion(shell: string): Promise<string> {
+  async getCompletion(_shell: string): Promise<string> {
     // Shell completion generator - creates completion scripts for bash, zsh, etc
     try {
-      return `# Completion for ${shell}`;
+      return `# Completion for shell`;
     } catch (error) {
       throw new Error(`Completion generation failed: ${error instanceof Error ? error.message : String(error)}`);
     }

@@ -1,23 +1,201 @@
-# FOST - Fast Open SDK Toolkit
+# Fost - Production SDK Generator
 
-A comprehensive TypeScript SDK generator for Web2 and Web3 APIs with LLM-powered code generation, prompt management, and safety features.
+## Overview
+
+Fost is an AI-powered CLI tool that generates fully-typed, production-ready SDKs from:
+
+- OpenAPI specifications
+- GraphQL schemas  
+- Smart contract ABIs (Web3)
+
+Generate SDKs in **minutes**, not days. Supports Web2 and Web3 APIs with TypeScript, Python, and more.
 
 ## Quick Start
 
+### Installation
+
 ```bash
-# Build the project
-npm run build
-
-# Generate SDK from OpenAPI spec
-node dist/src/cli/index.js generate --input api.yaml --lang typescript --type web2
-
-# For Web3 SDK generation
-node dist/src/cli/index.js generate --input api.yaml --lang typescript --type web3
+npm install -g fost
+# or
+npm install --save-dev fost
 ```
 
-## Features
+### Generate an SDK
 
-- **Multi-target Support**: Generate SDKs for Web2 and Web3
+```bash
+fost generate example-api.openapi.yaml --lang typescript --type web2
+```
+
+Generated SDK appears in `./sdk` directory with:
+- Fully-typed methods
+- Comprehensive documentation
+- Test suite
+- Ready for production use
+
+### Supported Targets
+
+**Web2:**
+- REST APIs via OpenAPI
+- GraphQL APIs
+- gRPC services
+
+**Web3:**
+- Smart contract ABIs (EVM, Solana, etc.)
+- Blockchain RPC endpoints
+- DeFi protocols
+
+## Usage
+
+### Basic Generation
+
+```bash
+fost generate --input api.openapi.yaml \
+  --output ./generated-sdk \
+  --lang typescript \
+  --type web2
+```
+
+### Validation Only
+
+```bash
+fost validate --input api.openapi.yaml --type web2
+```
+
+### Advanced Options
+
+```bash
+fost generate \
+  --input api.json \
+  --lang typescript \
+  --type web2 \
+  --output ./sdk \
+  --config fost.config.json \
+  --skip-tests \
+  --skip-docs \
+  --strict
+```
+
+## Configuration
+
+Create `fost.config.json` in your project root:
+
+```json
+{
+  "outputDir": "./sdk",
+  "target": "web2",
+  "strict": false,
+  "language": "typescript",
+  "includeTests": true,
+  "includeDocs": true,
+  "logLevel": "info",
+  "noColor": false
+}
+```
+
+Or use `package.json`:
+
+```json
+{
+  "fost": {
+    "outputDir": "./sdk",
+    "target": "web2"
+  }
+}
+```
+
+## Environment Variables
+
+- `DEBUG` - Enable debug output: `DEBUG=1 fost generate ...`
+- `NO_COLOR` - Disable colored output: `NO_COLOR=1 fost ...`
+
+## Examples
+
+### OpenAPI 3.0 to TypeScript SDK
+
+```bash
+fost generate petstore.openapi.yaml \
+  --lang typescript \
+  --type web2 \
+  --output ./petstore-sdk
+```
+
+Generated SDK:
+```typescript
+import { PetstoreClient } from './petstore-sdk';
+
+const client = new PetstoreClient();
+const pet = await client.pets.get('123');
+```
+
+### Smart Contract ABI to Web3 SDK
+
+```bash
+fost generate uniswap-v4.abi.json \
+  --lang typescript \
+  --type web3 \
+  --output ./uniswap-sdk
+```
+
+Generated SDK:
+```typescript
+import { UniswapV4 } from './uniswap-sdk';
+
+const contract = new UniswapV4(provider);
+const pools = await contract.getPools();
+```
+
+## Developers
+
+### Contributing
+
+We welcome contributions! See CONTRIBUTING.md.
+
+### Development
+
+```bash
+# Clone repo
+git clone https://github.com/Emmyhack/fost.git
+cd fost
+
+# Install dependencies
+npm install
+
+# Run tests
+npm test
+
+# Build
+npm run build
+
+# Try CLI locally
+npm run cli -- --help
+```
+
+### Project Structure
+
+```
+src/
+  cli/              - CLI commands and argument parsing
+  errors/           - Centralized error handling
+  logger/           - Structured logging
+  config/           - Configuration management
+  code-generation/  - SDK code generation engine
+  input-analysis/   - OpenAPI/ABI parsing
+  llm-operations/   - LLM integration for code quality
+```
+
+## License
+
+MIT - See LICENSE for details
+
+## Support
+
+- GitHub Issues: Report bugs
+- Discussions: Ask questions
+- Documentation: Full guide available in docs/
+
+---
+
+**Built with performance and developer experience in mind.**
 - **LLM Operations**: AI-powered code generation with safety controls
 - **Input Analysis**: Parse and normalize OpenAPI, Chain Metadata, and Contract ABI specifications
 - **Code Generation**: Generate type-safe, optimized SDKs

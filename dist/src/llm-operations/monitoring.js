@@ -90,7 +90,7 @@ class LLMMonitor {
     /**
      * Record validation failure
      */
-    recordValidationFailure(promptId) {
+    recordValidationFailure(_promptId) {
         if (!this.enabled)
             return;
         const latest = this.snapshots[this.snapshots.length - 1];

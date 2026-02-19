@@ -138,7 +138,7 @@ export class InputNormalizer {
     // Check all type references are resolvable
     spec.operations.forEach((op, opIdx) => {
       // Check response type
-      const responseType = this.resolveType(op.response.type, definedTypes, builtInTypes);
+      const responseType = this.resolveType(op.response.type, definedTypes);
       if (!responseType) {
         errors.push({
           code: "UNRESOLVABLE_RESPONSE_TYPE",
@@ -150,7 +150,7 @@ export class InputNormalizer {
 
       // Check parameter types
       op.parameters.forEach((param, paramIdx) => {
-        const paramType = this.resolveType(param.type, definedTypes, builtInTypes);
+        const paramType = this.resolveType(param.type, definedTypes);
         if (!paramType) {
           errors.push({
             code: "UNRESOLVABLE_PARAMETER_TYPE",
@@ -179,7 +179,7 @@ export class InputNormalizer {
     Object.entries(spec.types).forEach(([typeName, type]) => {
       if (type.fields) {
         Object.entries(type.fields).forEach(([fieldName, field]) => {
-          const fieldType = this.resolveType(field.type, definedTypes, builtInTypes);
+          const fieldType = this.resolveType(field.type, definedTypes);
           if (!fieldType) {
             errors.push({
               code: "UNRESOLVABLE_FIELD_TYPE",
@@ -192,7 +192,7 @@ export class InputNormalizer {
       }
 
       if (type.items) {
-        const itemType = this.resolveType(type.items.type, definedTypes, builtInTypes);
+        const itemType = this.resolveType(type.items.type, definedTypes);
         if (!itemType) {
           errors.push({
             code: "UNRESOLVABLE_ITEM_TYPE",
@@ -240,7 +240,7 @@ export class InputNormalizer {
   /**
    * Resolve a type name, handling arrays and references
    */
-  private resolveType(typeName: string, definedTypes: Set<string>, builtInTypes: Set<string>): boolean {
+  private resolveType(typeName: string, definedTypes: Set<string>): boolean {
     // Check built-in types
     if (builtInTypes.has(typeName)) {
       return true;
@@ -254,13 +254,13 @@ export class InputNormalizer {
     // Array notation: "Type[]"
     if (typeName.endsWith("[]")) {
       const elementType = typeName.slice(0, -2);
-      return this.resolveType(elementType, definedTypes, builtInTypes);
+      return this.resolveType(elementType, definedTypes);
     }
 
     // Fixed array notation: "Type[10]"
     const fixedArrayMatch = typeName.match(/^(.+)\[\d+\]$/);
     if (fixedArrayMatch) {
-      return this.resolveType(fixedArrayMatch[1], definedTypes, builtInTypes);
+      return this.resolveType(fixedArrayMatch[1], definedTypes);
     }
 
     return false;

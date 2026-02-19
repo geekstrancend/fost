@@ -65,9 +65,6 @@ export class ContractABIParser extends BaseParser {
       // Networks will be filled in by chain metadata parser
       const networks: NormalizedNetwork[] = [];
 
-      // Build smart contract definition
-      const smartContract = this.buildSmartContractDefinition(abi, operations, product.name);
-
       const normalized: NormalizedSpec = {
         product,
         types,

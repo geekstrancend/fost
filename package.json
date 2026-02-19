@@ -2,8 +2,8 @@
   "name": "fost",
   "version": "0.1.0",
   "description": "AI-powered SDK generator for Web2 and Web3 APIs. Generate fully-typed, documented SDKs in minutes from OpenAPI, GraphQL, or smart contract ABIs.",
-  "main": "dist/src/cli/index.js",
-  "types": "dist/src/cli/index.d.ts",
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
   "bin": {
     "fost": "./bin/fost.js"
   },
@@ -14,13 +14,28 @@
     "LICENSE",
     "package.json"
   ],
+  "exports": {
+    ".": {
+      "types": "./dist/src/index.d.ts",
+      "default": "./dist/src/index.js"
+    },
+    "./cli": {
+      "types": "./dist/src/cli/index.d.ts",
+      "default": "./dist/src/cli/index.js"
+    },
+    "./errors": {
+      "types": "./dist/src/errors/index.d.ts",
+      "default": "./dist/src/errors/index.js"
+    }
+  },
   "scripts": {
     "build": "tsc",
     "watch": "tsc --watch",
-    "test": "jest",
+    "test": "vitest run --coverage",
+    "test:watch": "vitest watch",
     "lint": "eslint src",
-    "cli": "node dist/cli/index.js",
-    "prepublishOnly": "npm run build",
+    "cli": "node dist/src/cli/index.js",
+    "prepublishOnly": "npm run build && npm run test",
     "batch:generate": "ts-node scripts/batch-generate.ts",
     "publish:sdk": "ts-node scripts/publish-sdk.ts",
     "ci:local": "npm run build && npm run batch:generate -- --specs-dir ./api-specs --output ./generated-sdks --languages typescript,python",

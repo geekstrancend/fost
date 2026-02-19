@@ -76,7 +76,7 @@ export declare class LLMMonitor {
     /**
      * Record validation failure
      */
-    recordValidationFailure(promptId: string): void;
+    recordValidationFailure(_promptId: string): void;
     /**
      * Get current metrics
      */

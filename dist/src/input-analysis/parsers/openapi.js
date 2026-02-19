@@ -189,7 +189,7 @@ class OpenAPIParser extends base_parser_1.BaseParser {
         }
         return normalized;
     }
-    extractOperations(openapi, types) {
+    extractOperations(openapi, _types) {
         const operations = [];
         const paths = openapi.paths || {};
         Object.entries(paths).forEach(([path, pathItem]) => {

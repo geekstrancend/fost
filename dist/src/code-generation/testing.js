@@ -7,9 +7,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.RegressionTestSuite = exports.Web3ChainSimulator = exports.MockAPITester = void 0;
 class MockAPITester {
-    constructor(baseURL, methods) {
+    constructor(_baseURL, methods) {
         this.requestHistory = [];
-        this.baseURL = baseURL;
         this.methods = new Map(methods.map(m => [m.name, m]));
         this.mockResponses = this.initializeMockResponses();
     }

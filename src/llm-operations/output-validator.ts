@@ -166,7 +166,7 @@ export class OutputValidator {
   /**
    * Check if actual type matches expected type
    */
-  private typeMatches(actualType: string, value: any, expectedType: string): boolean {
+  private typeMatches(_actualType: string, value: any, expectedType: string): boolean {
     switch (expectedType) {
       case 'string':
         return typeof value === 'string';
