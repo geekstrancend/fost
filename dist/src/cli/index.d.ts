@@ -9,6 +9,10 @@ export declare class CLIApplication {
     private readonly api;
     constructor(argv?: string[]);
     /**
+     * Handle init command - Initialize a new Fost project
+     */
+    private handleInit;
+    /**
      * Main CLI entry point
      * Does not include try-catch; errors are handled globally by bootstrap
      */

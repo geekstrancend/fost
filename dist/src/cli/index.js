@@ -17,6 +17,231 @@ class CLIApplication {
         this.api = (0, generator_api_1.createGeneratorAPI)();
     }
     /**
+     * Handle init command - Initialize a new Fost project
+     */
+    async handleInit(options) {
+        const projectType = options.type || "web2"; // web2 or web3
+        const projectName = options.name || "my-sdk";
+        try {
+            this.progress.start();
+            this.progress.update("Initializing project structure...", 20);
+            // Import file system operations
+            const fs = await import("fs/promises");
+            // Create directories
+            const directories = [
+                "specs",
+                "src",
+                "tests",
+                ".fost-cache",
+            ];
+            for (const dir of directories) {
+                try {
+                    await fs.mkdir(dir, { recursive: true });
+                }
+                catch (e) {
+                    // Directory might already exist, that's fine
+                }
+            }
+            this.progress.update("Creating configuration file...", 40);
+            // Create fost.config.json
+            const config = {
+                fost: {
+                    version: "1.0",
+                    inputDir: "./specs",
+                    outputDir: "./src",
+                    cacheDir: ".fost-cache",
+                    language: "typescript",
+                    strict: true,
+                    includeTests: true,
+                    includeDocs: true,
+                    inputs: [
+                        {
+                            type: projectType,
+                            path: `./specs/${projectName}.${projectType === "web3" ? "abi.json" : "openapi.json"}`,
+                            name: projectName,
+                        },
+                    ],
+                },
+            };
+            if (projectType === "web3") {
+                config.fost.web3 = {
+                    network: "ethereum",
+                    rpc: "${RPC_ENDPOINT}",
+                    chainId: 1,
+                };
+            }
+            else {
+                config.fost.api = {
+                    baseURL: "${API_BASE_URL}",
+                    timeout: 30000,
+                };
+                config.fost.auth = {
+                    type: "apikey",
+                    envVar: "API_KEY",
+                };
+            }
+            await fs.writeFile("fost.config.json", JSON.stringify(config, null, 2));
+            this.progress.update("Creating sample specification...", 60);
+            // Create sample spec files
+            if (projectType === "web3") {
+                const sampleABI = [
+                    {
+                        type: "function",
+                        name: "balanceOf",
+                        inputs: [{ name: "account", type: "address" }],
+                        outputs: [{ name: "", type: "uint256" }],
+                        stateMutability: "view",
+                    },
+                    {
+                        type: "function",
+                        name: "transfer",
+                        inputs: [
+                            { name: "to", type: "address" },
+                            { name: "amount", type: "uint256" },
+                        ],
+                        outputs: [{ name: "", type: "bool" }],
+                        stateMutability: "nonpayable",
+                    },
+                ];
+                await fs.writeFile(`specs/${projectName}.abi.json`, JSON.stringify(sampleABI, null, 2));
+            }
+            else {
+                const sampleOpenAPI = {
+                    openapi: "3.0.0",
+                    info: {
+                        title: projectName,
+                        version: "1.0.0",
+                        description: `Generated SDK for ${projectName}`,
+                    },
+                    servers: [{ url: "${API_BASE_URL}" }],
+                    paths: {
+                        "/": {
+                            get: {
+                                summary: "Get root",
+                                responses: {
+                                    "200": { description: "Success" },
+                                },
+                            },
+                        },
+                    },
+                };
+                await fs.writeFile(`specs/${projectName}.openapi.json`, JSON.stringify(sampleOpenAPI, null, 2));
+            }
+            this.progress.update("Creating environment file...", 75);
+            // Create .env.example
+            if (projectType === "web3") {
+                await fs.writeFile(".env.example", "RPC_ENDPOINT=https://eth-rpc.example.com\n" +
+                    "PRIVATE_KEY=your_private_key_here\n");
+            }
+            else {
+                await fs.writeFile(".env.example", "API_KEY=your_api_key_here\n" +
+                    "API_BASE_URL=https://api.example.com\n");
+            }
+            this.progress.update("Creating documentation...", 85);
+            // Create README
+            const readme = `# ${projectName}
+
+Generated SDK using Fost.
+
+## Getting Started
+
+### 1. Install dependencies
+\`\`\`bash
+npm install
+\`\`\`
+
+### 2. Configure
+Copy \`.env.example\` to \`.env\` and update with your values:
+\`\`\`bash
+cp .env.example .env
+\`\`\`
+
+### 3. Generate SDK
+\`\`\`bash
+fost generate
+\`\`\`
+
+### 4. Use the SDK
+\`\`\`typescript
+import { ${projectName.charAt(0).toUpperCase() + projectName.slice(1)}Client } from './src';
+
+const client = new ${projectName.charAt(0).toUpperCase() + projectName.slice(1)}Client({
+  ${projectType === "web3" ? "rpc: process.env.RPC_ENDPOINT" : "apiKey: process.env.API_KEY"},
+});
+
+// Use the client
+\`\`\`
+
+## Development
+
+- \`npm run generate\` - Generate SDK
+- \`npm test\` - Run tests
+- \`npm run lint\` - Lint code
+
+## Documentation
+See [fost documentation](https://docs.fost.dev) for more information.
+`;
+            await fs.writeFile("README.md", readme);
+            this.progress.update("Creating .gitignore...", 90);
+            // Create .gitignore
+            await fs.writeFile(".gitignore", "node_modules/\n" +
+                ".env\n" +
+                "dist/\n" +
+                "src/generated/\n" +
+                ".fost-cache/\n" +
+                "*.log\n" +
+                ".DS_Store\n");
+            this.progress.update("Creating TypeScript configuration...", 95);
+            // Create tsconfig.json
+            const tsconfig = {
+                compilerOptions: {
+                    target: "ES2020",
+                    module: "ESNext",
+                    lib: ["ES2020"],
+                    declaration: true,
+                    outDir: "./dist",
+                    rootDir: "./src",
+                    strict: true,
+                    esModuleInterop: true,
+                    skipLibCheck: true,
+                    forceConsistentCasingInFileNames: true,
+                    resolveJsonModule: true,
+                    moduleResolution: "node",
+                },
+                include: ["src/**/*"],
+                exclude: ["node_modules", "dist"],
+            };
+            await fs.writeFile("tsconfig.json", JSON.stringify(tsconfig, null, 2));
+            this.progress.succeed(`✨ Project initialized successfully!\n` +
+                `  Project Type: ${projectType}\n` +
+                `  Project Name: ${projectName}\n` +
+                `  Output: src/\n` +
+                `  Config: fost.config.json\n\n` +
+                `Next steps:\n` +
+                `  1. npm install\n` +
+                `  2. cp .env.example .env\n` +
+                `  3. Edit your API spec in specs/${projectName}.${projectType === "web3" ? "abi.json" : "openapi.json"}\n` +
+                `  4. fost generate\n`);
+            if (options.json) {
+                console.log(JSON.stringify({
+                    success: true,
+                    projectType,
+                    projectName,
+                    files: ["fost.config.json", ".env.example", "README.md", ".gitignore", "tsconfig.json"],
+                    directories: directories,
+                }, null, 2));
+            }
+        }
+        catch (error) {
+            this.progress.fail();
+            this.logger.error(`Initialization failed: ${error.message}`);
+            if (options.verbose) {
+                this.logger.error(error.stack);
+            }
+            process.exit(1);
+        }
+    }
+    /**
      * Main CLI entry point
      * Does not include try-catch; errors are handled globally by bootstrap
      */
@@ -30,6 +255,9 @@ class CLIApplication {
         });
         // Route to appropriate command handler
         switch (command) {
+            case "init":
+                await this.handleInit(options);
+                break;
             case "generate":
                 await this.handleGenerate(options);
                 break;
@@ -378,8 +606,47 @@ class CLIApplication {
      */
     handleHelp(command) {
         if (command) {
-            this.logger.info(`Help for command: ${command}`);
-            // Show specific command help
+            switch (command) {
+                case "init":
+                    console.log(`
+fost init [options]
+
+Initialize a new Fost project with default configuration.
+
+Options:
+  --type <type>     Project type: 'web2' (default) or 'web3'
+  --name <name>     Project/SDK name (default: 'my-sdk')
+  --force            Overwrite existing files
+
+Example:
+  fost init --type web2 --name my-api-sdk
+  fost init --type web3 --name contract-sdk
+          `);
+                    break;
+                case "generate":
+                    console.log(`
+fost generate [options]
+
+Generate SDK from specification.
+
+Options:
+  --input <file>      Input specification file (required)
+  --lang <language>   Target language: 'typescript', 'javascript', 'python'
+  --type <type>       Type: 'web2' (REST API) or 'web3' (smart contract)
+  --output <dir>      Output directory (default: ./sdk)
+  --name <name>       SDK name
+  --version <ver>     SDK version
+  --strict            Enable strict validation
+  --skip-tests        Skip test generation
+  --skip-docs         Skip documentation generation
+
+Example:
+  fost generate --input api.json --lang typescript --type web2
+          `);
+                    break;
+                default:
+                    console.log(`Help for command: ${command} (not found)`);
+            }
         }
         else {
             console.log(`
@@ -388,6 +655,7 @@ FOST SDK Generator CLI
 Usage: fost <command> [options]
 
 Commands:
+  init        Initialize a new Fost project
   generate    Generate SDK from specification
   validate    Validate input specification
   test        Run generated SDK tests
@@ -405,6 +673,7 @@ Options:
   --json          Output as JSON
 
 Examples:
+  fost init --type web2 --name my-sdk
   fost generate --input api.json --lang typescript --type web2
   fost validate --input openapi.yaml
   fost test --path ./generated-sdk --coverage
