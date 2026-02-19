@@ -4,7 +4,7 @@ import { createPaymentSession } from '@/lib/paycrest';
 
 interface CreatePaymentRequest {
   plan: 'pro' | 'enterprise';
-  paymentMethod?: 'card' | 'mobile_money' | 'paj_cash';
+  paymentMethod?: 'card';
 }
 
 const PLAN_PRICES: Record<string, { amount: number; currency: string; credits: number }> = {
@@ -50,9 +50,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    if (!['card', 'mobile_money', 'paj_cash'].includes(paymentMethod)) {
+    if (paymentMethod !== 'card') {
       return NextResponse.json(
-        { error: 'Invalid payment method. Supported: card, mobile_money, paj_cash' },
+        { error: 'Invalid payment method. Only card is supported.' },
         { status: 400 }
       );
     }

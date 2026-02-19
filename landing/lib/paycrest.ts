@@ -17,7 +17,7 @@ export interface PaymentRequest {
   userId: string;
   plan: 'pro' | 'enterprise';
   description: string;
-  paymentMethod?: 'card' | 'mobile_money' | 'paj_cash';
+  paymentMethod?: 'card';
   metadata?: Record<string, any>;
 }
 
