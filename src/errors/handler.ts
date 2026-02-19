@@ -2,7 +2,7 @@
  * Centralized Error Handler for FOST CLI
  */
 
-import { FosztError, isFosztError, getExitCode } from './base';
+import { isFosztError, getExitCode } from './base';
 
 /**
  * Main error handler for the CLI

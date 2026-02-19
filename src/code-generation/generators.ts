@@ -203,7 +203,7 @@ export class ErrorTypeBuilder {
   /**
    * Build error class declarations
    */
-  static buildErrors(plan: any): AST.ASTStatement[] {
+  static buildErrors(_plan: any): AST.ASTStatement[] {
     const errorStmts: AST.ASTStatement[] = [];
 
     // Base SDK Error
@@ -612,7 +612,7 @@ export class MethodBuilder {
   /**
    * Build a single method implementation
    */
-  static buildMethod(methodPlan: any, clientName: string): AST.ASTMethodDeclaration {
+  static buildMethod(methodPlan: any, _clientName: string): AST.ASTMethodDeclaration {
     const parameters: AST.ASTParameter[] = methodPlan.parameters.map((p: any) => ({
       type: "Parameter" as const,
       name: p.name,

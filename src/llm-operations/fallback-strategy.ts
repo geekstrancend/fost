@@ -31,7 +31,7 @@ export interface FallbackResult {
  * Tries progressively simpler approaches when main LLM call fails
  */
 export class FallbackStrategy {
-  private tier1Prompt?: (input: any) => string;
+  // Note: tier1Prompt is reserved for custom implementations
   private tier3TemplateGenerator?: (input: any, template: string) => any;
   private tier4Cache?: Map<string, any>;
 
@@ -90,7 +90,7 @@ export class FallbackStrategy {
     // Tier 4: Return cached result from similar query
     if (config.tier4) {
       try {
-        const result = this.executeTier4(options, config.tier4);
+        const result = await this.executeTier4(options, config.tier4);
         if (result.success) {
           return { success: true, tier: 'tier4', result: result.result };
         }
@@ -112,7 +112,7 @@ export class FallbackStrategy {
    */
   private async executeTier1(
     options: { promptId: string; input: any },
-    fallback: FallbackOption
+    _fallback: FallbackOption
   ): Promise<{ success: boolean; result?: any }> {
     // Tier 1 is typically handled by the LLM client with different parameters
     // This is a placeholder for the actual implementation
@@ -165,21 +165,23 @@ export class FallbackStrategy {
   /**
    * Tier 4: Return cached result
    */
-  private executeTier4(
+  private async executeTier4(
     options: { promptId: string; input: any },
-    fallback: FallbackOption
-  ): { success: boolean; result?: any } {
-    console.log(`Falling back to Tier 4: Cached result for ${options.promptId}`);
+    _fallback: FallbackOption
+  ): Promise<{ success: boolean; result?: any }> {
+    return new Promise(resolve => {
+      console.log(`Falling back to Tier 4: Cached result for ${options.promptId}`);
 
-    const cacheKey = this.getCacheKey(options.promptId, options.input);
-    const cached = this.tier4Cache?.get(cacheKey);
+      const cacheKey = this.getCacheKey(options.promptId, options.input);
+      const cached = this.tier4Cache?.get(cacheKey);
 
-    if (cached) {
-      console.log(`  Found cached result`);
-      return { success: true, result: cached };
-    }
-
-    return { success: false };
+      if (cached) {
+        console.log(`  Found cached result`);
+        resolve({ success: true, result: cached });
+      } else {
+        resolve({ success: false });
+      }
+    });
   }
 
   /**
@@ -193,8 +195,8 @@ export class FallbackStrategy {
   /**
    * Generate basic template-based output
    */
-  private generateBasicTemplate(promptId: string, input: any): any {
-    switch (promptId) {
+  private generateBasicTemplate(_promptId: string, _input: any): any {
+    switch (_promptId) {
       case 'typescript-types':
         return {
           interface_name: 'GeneratedType',
@@ -234,7 +236,7 @@ export class FallbackStrategy {
   /**
    * Get default fallback config for a prompt
    */
-  private getDefaultFallbackConfig(promptId: string): FallbackConfig {
+  private getDefaultFallbackConfig(_promptId: string): FallbackConfig {
     return {
       tier1: {
         type: 'alternate-prompt',
@@ -315,7 +317,7 @@ export class FallbackResultHandler {
   /**
    * Get quality assessment of fallback output
    */
-  static assessQuality(tier: FallbackTier, result: any): 'high' | 'medium' | 'low' {
+  static assessQuality(tier: FallbackTier, _result: any): 'high' | 'medium' | 'low' {
     // Tier 1: High quality (same model, different params)
     if (tier === 'tier1') return 'high';
 

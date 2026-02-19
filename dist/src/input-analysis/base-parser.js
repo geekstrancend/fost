@@ -160,7 +160,7 @@ class BaseParser extends types_1.SpecParser {
             visited.add(typeName);
         };
         // Check all types
-        definedTypes.forEach((type, typeName) => {
+        definedTypes.forEach((_type, typeName) => {
             checkType(typeName);
         });
         return { unresolvable: [...new Set(unresolvable)], circular };

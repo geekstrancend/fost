@@ -17,17 +17,11 @@ export declare class ContractABIParser extends BaseParser {
     private extractFunctionParameters;
     private extractFunctionReturnType;
     private extractErrors;
-    private buildSmartContractDefinition;
-    private abiItemToNormalizedFunction;
-    private abiItemToNormalizedEvent;
+    private getExampleForSolidityType;
     /**
      * Normalize Solidity types to SDK types
      * uint256 -> bigint, address -> Address, etc.
      */
     private normalizeSolidityType;
-    /**
-     * Provide example values for Solidity types for documentation
-     */
-    private getExampleForSolidityType;
 }
 //# sourceMappingURL=contract-abi.d.ts.map

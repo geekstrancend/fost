@@ -83,11 +83,10 @@ declare class MockAPITester {
     clearHistory(): void;
 }
 declare class Web3ChainSimulator {
-    private chainId;
     private methods;
     private state;
     private transactionLog;
-    constructor(chainId: number, methods: SDKMethod[]);
+    constructor(_chainId: number, methods: SDKMethod[]);
     generateTestSuite(): TestSuite;
     private createReadOperationTest;
     private createWriteOperationTest;

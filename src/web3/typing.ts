@@ -37,7 +37,7 @@ export const CHAIN_IDS = {
  * Create ChainId type
  */
 export function chainId(value: number): ChainId {
-  const validChains = Object.values(CHAIN_IDS);
+  const validChains = Object.values(CHAIN_IDS) as number[];
   if (!validChains.includes(value)) {
     throw new Error(`Invalid chain ID: ${value}`);
   }

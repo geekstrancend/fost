@@ -6,10 +6,8 @@
  */
 
 import {
-  InputSpec,
   NormalizedSpec,
   NormalizedType,
-  ParserResult,
   ParsingError,
   SpecParser,
   NormalizationNote,
@@ -184,7 +182,7 @@ export abstract class BaseParser extends SpecParser {
     };
 
     // Check all types
-    definedTypes.forEach((type, typeName) => {
+    definedTypes.forEach((_type, typeName) => {
       checkType(typeName);
     });
 

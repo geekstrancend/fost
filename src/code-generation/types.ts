@@ -6,16 +6,8 @@
  */
 
 import {
-  Web3ReadOperation,
-  Web3WriteOperation,
-  TransactionLifecycle,
   ConfirmationStrategy,
-  GasEstimate,
-  WalletConnection,
-  WalletConnectionState,
   BlockchainNetwork,
-  SmartContractEventSubscription,
-  SigningRequest,
 } from "../../WEB3_SCHEMA_EXTENSIONS";
 
 // ============================================================================

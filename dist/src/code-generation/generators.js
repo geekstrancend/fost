@@ -199,7 +199,7 @@ class ErrorTypeBuilder {
     /**
      * Build error class declarations
      */
-    static buildErrors(plan) {
+    static buildErrors(_plan) {
         const errorStmts = [];
         // Base SDK Error
         const baseErrorClass = {
@@ -592,7 +592,7 @@ class MethodBuilder {
     /**
      * Build a single method implementation
      */
-    static buildMethod(methodPlan, clientName) {
+    static buildMethod(methodPlan, _clientName) {
         const parameters = methodPlan.parameters.map((p) => ({
             type: "Parameter",
             name: p.name,

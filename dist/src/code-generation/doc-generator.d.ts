@@ -148,9 +148,8 @@ export declare class QuickstartBuilder {
 }
 export declare class AuthenticationBuilder {
     private config;
-    private context;
     constructor(config: DocumentationConfig);
-    withContext(context: DocumentationContext): AuthenticationBuilder;
+    withContext(_context: DocumentationContext): AuthenticationBuilder;
     build(): string;
     private buildTitle;
     private buildAuthMethod;
@@ -163,11 +162,8 @@ export declare class AuthenticationBuilder {
     private buildNoAuthRequired;
 }
 export declare class ExamplesBuilder {
-    private config;
-    private context;
     private examples;
-    constructor(config: DocumentationConfig);
-    withContext(context: DocumentationContext): ExamplesBuilder;
+    withContext(_context: DocumentationContext): ExamplesBuilder;
     addExample(example: CodeExample): ExamplesBuilder;
     build(): string;
     private buildTitle;
@@ -177,10 +173,8 @@ export declare class ExamplesBuilder {
     private buildExampleSection;
 }
 export declare class ErrorHandlingBuilder {
-    private config;
-    private context;
-    constructor(config: DocumentationConfig);
-    withContext(context: DocumentationContext): ErrorHandlingBuilder;
+    private _context;
+    withContext(_context: DocumentationContext): ErrorHandlingBuilder;
     build(): string;
     private buildTitle;
     private buildErrorTypes;

@@ -559,14 +559,12 @@ export class QuickstartBuilder {
 
 export class AuthenticationBuilder {
   private config: DocumentationConfig;
-  private context: DocumentationContext | null = null;
 
   constructor(config: DocumentationConfig) {
     this.config = config;
   }
 
-  withContext(context: DocumentationContext): AuthenticationBuilder {
-    this.context = context;
+  withContext(_context: DocumentationContext): AuthenticationBuilder {
     return this;
   }
 
@@ -754,16 +752,9 @@ export class AuthenticationBuilder {
 // ============================================================================
 
 export class ExamplesBuilder {
-  private config: DocumentationConfig;
-  private context: DocumentationContext | null = null;
   private examples: CodeExample[] = [];
 
-  constructor(config: DocumentationConfig) {
-    this.config = config;
-  }
-
-  withContext(context: DocumentationContext): ExamplesBuilder {
-    this.context = context;
+  withContext(_context: DocumentationContext): ExamplesBuilder {
     return this;
   }
 
@@ -892,15 +883,10 @@ export class ExamplesBuilder {
 // ============================================================================
 
 export class ErrorHandlingBuilder {
-  private config: DocumentationConfig;
-  private context: DocumentationContext | null = null;
+  private _context: DocumentationContext | null = null;
 
-  constructor(config: DocumentationConfig) {
-    this.config = config;
-  }
-
-  withContext(context: DocumentationContext): ErrorHandlingBuilder {
-    this.context = context;
+  withContext(_context: DocumentationContext): ErrorHandlingBuilder {
+    this._context = _context;
     return this;
   }
 
@@ -924,13 +910,13 @@ export class ErrorHandlingBuilder {
   }
 
   private buildErrorTypes(): string {
-    if (!this.context || !this.context.errorTypes || this.context.errorTypes.size === 0) {
+    if (!this._context || !this._context.errorTypes || this._context.errorTypes.size === 0) {
       return this.buildGenericErrors();
     }
 
     const sections: string[] = ["## Error Types", ""];
 
-    const errors = Array.from(this.context.errorTypes.values());
+    const errors = Array.from(this._context.errorTypes.values());
 
     // Group by category
     const byCategory = new Map<string, ErrorDocumentation[]>();
@@ -1150,13 +1136,13 @@ export class DocumentationGenerator {
   }
 
   generateExamples(examples: CodeExample[]): string {
-    const builder = new ExamplesBuilder(this.config).withContext(this.context!);
+    const builder = new ExamplesBuilder().withContext(this.context!);
     examples.forEach((ex) => builder.addExample(ex));
     return builder.build();
   }
 
   generateErrorHandling(): string {
-    return new ErrorHandlingBuilder(this.config).withContext(this.context!).build();
+    return new ErrorHandlingBuilder().withContext(this.context!).build();
   }
 
   generateAll(examples: CodeExample[]): GeneratedDocumentation {

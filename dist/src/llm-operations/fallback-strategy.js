@@ -54,7 +54,7 @@ class FallbackStrategy {
         // Tier 4: Return cached result from similar query
         if (config.tier4) {
             try {
-                const result = this.executeTier4(options, config.tier4);
+                const result = await this.executeTier4(options, config.tier4);
                 if (result.success) {
                     return { success: true, tier: 'tier4', result: result.result };
                 }
@@ -73,7 +73,7 @@ class FallbackStrategy {
     /**
      * Tier 1: Alternate prompt with stricter parameters
      */
-    async executeTier1(options, fallback) {
+    async executeTier1(options, _fallback) {
         // Tier 1 is typically handled by the LLM client with different parameters
         // This is a placeholder for the actual implementation
         console.log(`Falling back to Tier 1: Alternate prompt for ${options.promptId}`);
@@ -113,15 +113,19 @@ class FallbackStrategy {
     /**
      * Tier 4: Return cached result
      */
-    executeTier4(options, fallback) {
-        console.log(`Falling back to Tier 4: Cached result for ${options.promptId}`);
-        const cacheKey = this.getCacheKey(options.promptId, options.input);
-        const cached = this.tier4Cache?.get(cacheKey);
-        if (cached) {
-            console.log(`  Found cached result`);
-            return { success: true, result: cached };
-        }
-        return { success: false };
+    async executeTier4(options, _fallback) {
+        return new Promise(resolve => {
+            console.log(`Falling back to Tier 4: Cached result for ${options.promptId}`);
+            const cacheKey = this.getCacheKey(options.promptId, options.input);
+            const cached = this.tier4Cache?.get(cacheKey);
+            if (cached) {
+                console.log(`  Found cached result`);
+                resolve({ success: true, result: cached });
+            }
+            else {
+                resolve({ success: false });
+            }
+        });
     }
     /**
      * Cache successful result for future fallback
@@ -133,8 +137,8 @@ class FallbackStrategy {
     /**
      * Generate basic template-based output
      */
-    generateBasicTemplate(promptId, input) {
-        switch (promptId) {
+    generateBasicTemplate(_promptId, _input) {
+        switch (_promptId) {
             case 'typescript-types':
                 return {
                     interface_name: 'GeneratedType',
@@ -170,7 +174,7 @@ class FallbackStrategy {
     /**
      * Get default fallback config for a prompt
      */
-    getDefaultFallbackConfig(promptId) {
+    getDefaultFallbackConfig(_promptId) {
         return {
             tier1: {
                 type: 'alternate-prompt',
@@ -246,7 +250,7 @@ class FallbackResultHandler {
     /**
      * Get quality assessment of fallback output
      */
-    static assessQuality(tier, result) {
+    static assessQuality(tier, _result) {
         // Tier 1: High quality (same model, different params)
         if (tier === 'tier1')
             return 'high';

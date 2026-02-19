@@ -16,7 +16,6 @@ import {
   NormalizedAuth,
   NormalizedNetwork,
   ParserResult,
-  InputSourceInfo,
 } from "../types";
 import {
   BaseParser,
@@ -25,7 +24,6 @@ import {
   extractExample,
   normalizeHttpMethod,
   classifyParameterLocation,
-  flattenRefPath,
   isFieldRequired,
 } from "../base-parser";
 
@@ -376,7 +374,7 @@ export class OpenAPIParser extends BaseParser {
     const errors: string[] = [];
     const responses = operation.responses || {};
 
-    Object.entries(responses).forEach(([status, response]: [string, any]) => {
+    Object.entries(responses).forEach(([status, _response]: [string, any]) => {
       const statusCode = parseInt(status);
       if (statusCode >= 400) {
         // Map common error status codes
@@ -430,7 +428,7 @@ export class OpenAPIParser extends BaseParser {
     return Object.keys(example).length > 0 ? example : undefined;
   }
 
-  private extractErrors(openapi: any, operations: NormalizedOperation[]): NormalizedError[] {
+  private extractErrors(_openapi: any, operations: NormalizedOperation[]): NormalizedError[] {
     const errors: NormalizedError[] = [];
     const errorCodes = new Set<string>();
 

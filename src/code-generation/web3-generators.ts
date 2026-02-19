@@ -10,10 +10,6 @@
 import * as AST from "./types";
 import {
   Web3SDKDesignPlan,
-  ContractBindingConfig,
-  WalletIntegrationConfig,
-  TransactionMonitoringConfig,
-  EventSubscriptionConfig,
 } from "./types";
 
 /**

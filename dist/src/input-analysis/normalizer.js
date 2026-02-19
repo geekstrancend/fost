@@ -14,6 +14,20 @@ const chain_metadata_1 = require("./parsers/chain-metadata");
 class InputNormalizer {
     constructor() {
         this.parsers = [];
+        this.builtInTypes = new Set([
+            "string",
+            "number",
+            "boolean",
+            "bytes",
+            "bigint",
+            "timestamp",
+            "null",
+            "any",
+            "integer",
+            "Address",
+            "BigInt",
+            "Bytes32",
+        ]);
         // Register all built-in parsers
         this.registerParser(new openapi_1.OpenAPIParser());
         this.registerParser(new contract_abi_1.ContractABIParser());
@@ -101,20 +115,6 @@ class InputNormalizer {
         }
         // Validate types
         const definedTypes = new Set(Object.keys(spec.types));
-        const builtInTypes = new Set([
-            "string",
-            "number",
-            "boolean",
-            "bytes",
-            "bigint",
-            "timestamp",
-            "null",
-            "any",
-            "integer",
-            "Address",
-            "BigInt",
-            "Bytes32",
-        ]);
         // Check all type references are resolvable
         spec.operations.forEach((op, opIdx) => {
             // Check response type
@@ -214,7 +214,7 @@ class InputNormalizer {
      */
     resolveType(typeName, definedTypes) {
         // Check built-in types
-        if (builtInTypes.has(typeName)) {
+        if (this.builtInTypes.has(typeName)) {
             return true;
         }
         // Check defined types

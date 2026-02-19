@@ -725,7 +725,7 @@ class BreakingChangeDetector {
     const deprecatedFeatures: string[] = [];
 
     // Detect removed methods
-    this.previousMethods.forEach((prevMethod, name) => {
+    this.previousMethods.forEach((_prevMethod, name) => {
       if (!this.currentMethods.has(name)) {
         removedMethods.push(name);
         changedMethods.push({

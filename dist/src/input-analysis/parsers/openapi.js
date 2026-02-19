@@ -299,7 +299,7 @@ class OpenAPIParser extends base_parser_1.BaseParser {
     extractErrorCodes(operation) {
         const errors = [];
         const responses = operation.responses || {};
-        Object.entries(responses).forEach(([status, response]) => {
+        Object.entries(responses).forEach(([status, _response]) => {
             const statusCode = parseInt(status);
             if (statusCode >= 400) {
                 // Map common error status codes
@@ -343,7 +343,7 @@ class OpenAPIParser extends base_parser_1.BaseParser {
         }
         return Object.keys(example).length > 0 ? example : undefined;
     }
-    extractErrors(openapi, operations) {
+    extractErrors(_openapi, operations) {
         const errors = [];
         const errorCodes = new Set();
         // Collect all error codes from operations

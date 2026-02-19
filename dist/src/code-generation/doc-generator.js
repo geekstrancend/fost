@@ -363,11 +363,9 @@ exports.QuickstartBuilder = QuickstartBuilder;
 // ============================================================================
 class AuthenticationBuilder {
     constructor(config) {
-        this.context = null;
         this.config = config;
     }
-    withContext(context) {
-        this.context = context;
+    withContext(_context) {
         return this;
     }
     build() {
@@ -541,13 +539,10 @@ exports.AuthenticationBuilder = AuthenticationBuilder;
 // EXAMPLES BUILDER
 // ============================================================================
 class ExamplesBuilder {
-    constructor(config) {
-        this.context = null;
+    constructor() {
         this.examples = [];
-        this.config = config;
     }
-    withContext(context) {
-        this.context = context;
+    withContext(_context) {
         return this;
     }
     addExample(example) {
@@ -647,12 +642,11 @@ exports.ExamplesBuilder = ExamplesBuilder;
 // ERROR HANDLING BUILDER
 // ============================================================================
 class ErrorHandlingBuilder {
-    constructor(config) {
-        this.context = null;
-        this.config = config;
+    constructor() {
+        this._context = null;
     }
-    withContext(context) {
-        this.context = context;
+    withContext(_context) {
+        this._context = _context;
         return this;
     }
     build() {
@@ -671,11 +665,11 @@ class ErrorHandlingBuilder {
         ].join("\n");
     }
     buildErrorTypes() {
-        if (!this.context || !this.context.errorTypes || this.context.errorTypes.size === 0) {
+        if (!this._context || !this._context.errorTypes || this._context.errorTypes.size === 0) {
             return this.buildGenericErrors();
         }
         const sections = ["## Error Types", ""];
-        const errors = Array.from(this.context.errorTypes.values());
+        const errors = Array.from(this._context.errorTypes.values());
         // Group by category
         const byCategory = new Map();
         errors.forEach((error) => {
@@ -878,12 +872,12 @@ class DocumentationGenerator {
         return new AuthenticationBuilder(this.config).withContext(this.context).build();
     }
     generateExamples(examples) {
-        const builder = new ExamplesBuilder(this.config).withContext(this.context);
+        const builder = new ExamplesBuilder().withContext(this.context);
         examples.forEach((ex) => builder.addExample(ex));
         return builder.build();
     }
     generateErrorHandling() {
-        return new ErrorHandlingBuilder(this.config).withContext(this.context).build();
+        return new ErrorHandlingBuilder().withContext(this.context).build();
     }
     generateAll(examples) {
         return {

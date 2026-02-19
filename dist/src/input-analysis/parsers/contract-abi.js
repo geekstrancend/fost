@@ -232,74 +232,25 @@ class ContractABIParser extends base_parser_1.BaseParser {
         });
         return errors;
     }
-    buildSmartContractDefinition(abi, operations, contractName) {
-        const contract = {
-            name: contractName,
-            abi: {},
-            constructor: {
-                inputs: [],
-            },
+    // NOTE: These methods are helpers for potential future smart contract parsing
+    // Currently some of these are unused as the parse method doesn't decompose into function-level details
+    // abiItemToNormalizedFunction and abiItemToNormalizedEvent are left out but getExampleForSolidityType is kept
+    getExampleForSolidityType(solidityType) {
+        if (solidityType.includes("[]")) {
+            const elementType = solidityType.replace("[]", "");
+            return [this.getExampleForSolidityType(elementType)];
+        }
+        const examples = {
+            address: "0x1234567890123456789012345678901234567890",
+            uint256: "1000000000000000000",
+            uint: "1000000000000000000",
+            int256: "1000000000000000000",
+            bool: true,
+            string: "example value",
+            bytes: "0x1234",
+            bytes32: "0x0000000000000000000000000000000000000000000000000000000000000000",
         };
-        abi.forEach((item) => {
-            if (item.type === "function") {
-                contract.abi[item.name] = this.abiItemToNormalizedFunction(item);
-            }
-            else if (item.type === "event") {
-                contract.abi[item.name] = this.abiItemToNormalizedEvent(item);
-            }
-            else if (item.type === "constructor") {
-                contract.constructor = {
-                    inputs: (item.inputs || []).map((input, idx) => ({
-                        name: input.name || `param${idx}`,
-                        type: this.normalizeSolidityType(input.type),
-                        description: input.description || "",
-                        required: true,
-                        nullable: false,
-                        location: "input",
-                    })),
-                };
-            }
-        });
-        return contract;
-    }
-    abiItemToNormalizedFunction(item) {
-        const outputs = item.outputs || [];
-        return {
-            name: item.name,
-            type: "function",
-            stateMutability: item.stateMutability || "nonpayable",
-            inputs: (item.inputs || []).map((input, idx) => ({
-                name: input.name || `param${idx}`,
-                type: this.normalizeSolidityType(input.type),
-                description: input.description || "",
-                required: true,
-                nullable: false,
-                location: "input",
-            })),
-            outputs: outputs.length > 0
-                ? outputs.map((output, idx) => ({
-                    name: output.name || `output${idx}`,
-                    type: this.normalizeSolidityType(output.type),
-                }))
-                : undefined,
-            description: item.description,
-        };
-    }
-    abiItemToNormalizedEvent(item) {
-        return {
-            name: item.name,
-            type: "event",
-            inputs: (item.inputs || []).map((input, idx) => ({
-                name: input.name || `param${idx}`,
-                type: this.normalizeSolidityType(input.type),
-                description: input.description || "",
-                required: true,
-                nullable: false,
-                indexed: input.indexed === true,
-                location: "input",
-            })),
-            description: item.description,
-        };
+        return examples[solidityType] || null;
     }
     /**
      * Normalize Solidity types to SDK types
@@ -344,26 +295,6 @@ class ContractABIParser extends base_parser_1.BaseParser {
             false: "boolean",
         };
         return typeMap[solidityType] || solidityType;
-    }
-    /**
-     * Provide example values for Solidity types for documentation
-     */
-    getExampleForSolidityType(solidityType) {
-        if (solidityType.includes("[]")) {
-            const elementType = solidityType.replace("[]", "");
-            return [this.getExampleForSolidityType(elementType)];
-        }
-        const examples = {
-            address: "0x1234567890123456789012345678901234567890",
-            uint256: "1000000000000000000",
-            uint: "1000000000000000000",
-            int256: "1000000000000000000",
-            bool: true,
-            string: "example value",
-            bytes: "0x1234",
-            bytes32: "0x0000000000000000000000000000000000000000000000000000000000000000",
-        };
-        return examples[solidityType] || null;
     }
 }
 exports.ContractABIParser = ContractABIParser;

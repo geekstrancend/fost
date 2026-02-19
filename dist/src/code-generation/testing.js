@@ -142,7 +142,7 @@ class MockAPITester {
         ];
         return responses[index] || responses[0];
     }
-    generateInvalidParameters(method) {
+    generateInvalidParameters(_method) {
         return {
             invalidField: "test",
             wrongType: 123,
@@ -214,9 +214,8 @@ class MockAPITester {
 }
 exports.MockAPITester = MockAPITester;
 class Web3ChainSimulator {
-    constructor(chainId, methods) {
+    constructor(_chainId, methods) {
         this.transactionLog = [];
-        this.chainId = chainId;
         this.methods = new Map(methods.map(m => [m.name, m]));
         this.state = {
             balances: new Map(),

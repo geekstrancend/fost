@@ -25,7 +25,7 @@ export declare class ErrorTypeBuilder {
     /**
      * Build error class declarations
      */
-    static buildErrors(plan: any): AST.ASTStatement[];
+    static buildErrors(_plan: any): AST.ASTStatement[];
 }
 /**
  * Builder for configuration types
@@ -43,7 +43,7 @@ export declare class MethodBuilder {
     /**
      * Build a single method implementation
      */
-    static buildMethod(methodPlan: any, clientName: string): AST.ASTMethodDeclaration;
+    static buildMethod(methodPlan: any, _clientName: string): AST.ASTMethodDeclaration;
 }
 /**
  * Builder for type definitions

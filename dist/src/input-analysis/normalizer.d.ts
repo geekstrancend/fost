@@ -7,6 +7,7 @@ import { InputSpec, NormalizedSpec, ValidationError } from "./types";
 import { BaseParser } from "./base-parser";
 export declare class InputNormalizer {
     private parsers;
+    private readonly builtInTypes;
     constructor();
     /**
      * Register a custom parser

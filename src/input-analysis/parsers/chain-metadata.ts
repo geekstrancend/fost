@@ -8,7 +8,6 @@
 import {
   InputSpec,
   NormalizedSpec,
-  NormalizedProductInfo,
   NormalizedNetwork,
   ParserResult,
   NormalizedChainMetadata,

@@ -7,7 +7,6 @@
 import {
   InputSpec,
   NormalizedSpec,
-  ParserResult,
   ValidationResult,
   ValidationError,
   ValidationWarning,
@@ -19,6 +18,20 @@ import { BaseParser } from "./base-parser";
 
 export class InputNormalizer {
   private parsers: BaseParser[] = [];
+  private readonly builtInTypes = new Set([
+    "string",
+    "number",
+    "boolean",
+    "bytes",
+    "bigint",
+    "timestamp",
+    "null",
+    "any",
+    "integer",
+    "Address",
+    "BigInt",
+    "Bytes32",
+  ]);
 
   constructor() {
     // Register all built-in parsers
@@ -120,20 +133,6 @@ export class InputNormalizer {
 
     // Validate types
     const definedTypes = new Set(Object.keys(spec.types));
-    const builtInTypes = new Set([
-      "string",
-      "number",
-      "boolean",
-      "bytes",
-      "bigint",
-      "timestamp",
-      "null",
-      "any",
-      "integer",
-      "Address",
-      "BigInt",
-      "Bytes32",
-    ]);
 
     // Check all type references are resolvable
     spec.operations.forEach((op, opIdx) => {
@@ -242,7 +241,7 @@ export class InputNormalizer {
    */
   private resolveType(typeName: string, definedTypes: Set<string>): boolean {
     // Check built-in types
-    if (builtInTypes.has(typeName)) {
+    if (this.builtInTypes.has(typeName)) {
       return true;
     }
 

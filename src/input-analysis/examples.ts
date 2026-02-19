@@ -5,7 +5,7 @@
  * Shows deterministic parsing with no hallucination.
  */
 
-import { InputSpec, NormalizedSpec } from "./types";
+import { InputSpec } from "./types";
 import { normalizeInput } from "./normalizer";
 
 // ============================================================================

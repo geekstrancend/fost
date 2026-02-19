@@ -4,7 +4,7 @@
  * Behavior verification and regression testing
  */
 
-import { SDKDesignPlan, SDKMethod } from "./types";
+import { SDKMethod } from "./types";
 
 // ============================================================================
 // TEST TYPES
@@ -226,7 +226,7 @@ class MockAPITester {
     return responses[index] || responses[0];
   }
 
-  private generateInvalidParameters(method: SDKMethod): unknown {
+  private generateInvalidParameters(_method: SDKMethod): unknown {
     return {
       invalidField: "test",
       wrongType: 123,
@@ -309,13 +309,11 @@ class MockAPITester {
 }
 
 class Web3ChainSimulator {
-  private chainId: number;
   private methods: Map<string, SDKMethod>;
   private state: SimulationState;
   private transactionLog: Web3TransactionResult[] = [];
 
-  constructor(chainId: number, methods: SDKMethod[]) {
-    this.chainId = chainId;
+  constructor(_chainId: number, methods: SDKMethod[]) {
     this.methods = new Map(methods.map(m => [m.name, m]));
     this.state = {
       balances: new Map(),

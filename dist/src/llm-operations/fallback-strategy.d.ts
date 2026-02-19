@@ -25,7 +25,6 @@ export interface FallbackResult {
  * Tries progressively simpler approaches when main LLM call fails
  */
 export declare class FallbackStrategy {
-    private tier1Prompt?;
     private tier3TemplateGenerator?;
     private tier4Cache?;
     constructor();
@@ -99,7 +98,7 @@ export declare class FallbackResultHandler {
     /**
      * Get quality assessment of fallback output
      */
-    static assessQuality(tier: FallbackTier, result: any): 'high' | 'medium' | 'low';
+    static assessQuality(tier: FallbackTier, _result: any): 'high' | 'medium' | 'low';
     /**
      * Suggest user action based on fallback result
      */
