@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { FostConfig, ConfigLoader, validateConfig } from '../src/config';
+import { FostConfig, ConfigLoader, validateConfig } from '../../dist/src/config';
 
 describe('ConfigLoader', () => {
   it('should return default config when no config file exists', async () => {

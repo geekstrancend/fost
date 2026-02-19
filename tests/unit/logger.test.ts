@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { createLogger } from '../src/logger';
+import { createLogger } from '../../dist/src/logger';
 
 describe('Logger', () => {
   it('should create a logger instance', () => {

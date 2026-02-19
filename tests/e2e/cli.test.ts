@@ -9,7 +9,7 @@ describe('CLI E2E Tests', () => {
 
   beforeEach(() => {
     // Create temporary test directory
-    testDir = fs.mkdempSync(path.join(os.tmpdir(), 'fost-e2e-'));
+    testDir = fs.mkdtempSync(path.join(os.tmpdir(), 'fost-e2e-'));
   });
 
   afterEach(() => {
