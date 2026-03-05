@@ -34,7 +34,7 @@ describe('validateConfig', () => {
     const result = validateConfig(config);
 
     expect(result.valid).toBe(false);
-    expect(result.errors).toContain(expect.stringContaining('Invalid target'));
+    expect(result.errors.some(e => e.includes('Invalid target'))).toBe(true);
   });
 
   it('should reject non-boolean strict value', () => {
@@ -45,7 +45,7 @@ describe('validateConfig', () => {
     const result = validateConfig(config);
 
     expect(result.valid).toBe(false);
-    expect(result.errors).toContain(expect.stringContaining('strict must be a boolean'));
+    expect(result.errors.some(e => e.includes('strict must be a boolean'))).toBe(true);
   });
 
   it('should reject invalid log level', () => {
@@ -56,7 +56,7 @@ describe('validateConfig', () => {
     const result = validateConfig(config);
 
     expect(result.valid).toBe(false);
-    expect(result.errors).toContain(expect.stringContaining('Invalid logLevel'));
+    expect(result.errors.some(e => e.includes('Invalid logLevel'))).toBe(true);
   });
 
   it('should accept valid config with all fields', () => {

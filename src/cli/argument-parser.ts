@@ -38,6 +38,16 @@ export function parseArguments(args: string[]): ParsedArguments {
   let command: string | undefined;
   let i = 0;
 
+  // Check for global flags first (-h, --help, -v, --version)
+  for (let j = 0; j < args.length; j++) {
+    if (args[j] === "--help" || args[j] === "-h") {
+      return { command: "help", options: { help: true } };
+    }
+    if (args[j] === "--version" || args[j] === "-v") {
+      return { command: "version", options: { version: true } };
+    }
+  }
+
   // Get command
   if (args.length > 0 && !args[0].startsWith("-")) {
     command = args[0];
