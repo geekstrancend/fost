@@ -4,8 +4,7 @@ npm-debug.log
 *.lock
 
 # Build outputs
-dist/src/**/*.map
-dist/**/*.d.ts.map
+/dist
 .next/
 .vercel/
 

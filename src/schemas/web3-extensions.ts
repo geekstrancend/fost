@@ -16,7 +16,7 @@
 import {
   CanonicalOperation,
   OperationParameter,
-} from "./CANONICAL_SCHEMA";
+} from "./canonical.schema";
 
 // ============================================================================
 // SECTION 1: TRANSACTION TYPES & STATES
