@@ -64,6 +64,14 @@ export function createProgressReporter(): ProgressReporter {
       const msg = message ? ` ${message}` : '';
       console.log(`\n ✗ Operation failed${msg}`);
     },
+
+    /**
+     * Stop progress tracking
+     */
+    stop(): void {
+      isRunning = false;
+      clearLine();
+    },
   };
 }
 

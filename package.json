@@ -15,24 +15,25 @@
     "package.json"
   ],
   "engines": {
-    "node": ">=18.0.0",
-    "npm": ">=9.0.0"
+    "node": ">=18.0.0"
   },
   "keywords": [
     "sdk",
     "generator",
     "ai",
     "openapi",
+    "graphql",
     "web3",
     "smart-contracts",
     "typescript",
+    "cli",
     "code-generation"
   ],
   "repository": {
     "type": "git",
     "url": "https://github.com/Emmyhack/fost.git"
   },
-  "homepage": "https://fost.vercel.app",
+  "homepage": "https://github.com/Emmyhack/fost#readme",
   "bugs": {
     "url": "https://github.com/Emmyhack/fost/issues"
   },
@@ -65,32 +66,8 @@
     "ci:local": "npm run build && npm run batch:generate -- --specs-dir ./api-specs --output ./generated-sdks --languages typescript,python",
     "ci:validate": "npm run lint && npm run test && npm run batch:generate -- --no-validate"
   },
-  "keywords": [
-    "sdk",
-    "generator",
-    "ai",
-    "openapi",
-    "graphql",
-    "web3",
-    "smart-contracts",
-    "typescript",
-    "cli",
-    "code-generation"
-  ],
-  "author": "Emmyhack",
-  "license": "MIT",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/Emmyhack/fost.git"
-  },
-  "bugs": {
-    "url": "https://github.com/Emmyhack/fost/issues"
-  },
-  "homepage": "https://github.com/Emmyhack/fost#readme",
-  "engines": {
-    "node": ">=18.0.0"
-  },
   "devDependencies": {
+    "@types/node": "^25.3.3",
     "@vitest/coverage-v8": "^4.0.18",
     "typescript": "^5.9.3",
     "vitest": "^4.0.18"

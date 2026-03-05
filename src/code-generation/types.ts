@@ -8,7 +8,7 @@
 import {
   ConfirmationStrategy,
   BlockchainNetwork,
-} from "../../WEB3_SCHEMA_EXTENSIONS";
+} from "../schemas/web3-extensions";
 
 // ============================================================================
 // SDK DESIGN PLAN - Input to Code Generation

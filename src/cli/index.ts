@@ -496,9 +496,12 @@ See [fost documentation](https://docs.fost.dev) for more information.
         this.progress.error("");
         this.logger.error("Input validation failed:");
         validation.errors.forEach((err) => {
-          this.logger.error(`  ${err.code}: ${err.message}`);
-          if (err.suggestion) {
-            this.logger.info(`  Suggestion: ${err.suggestion}`);
+          this.logger.error(`  ${err.code}: ${err.message}${err.location ? ` (${err.location})` : ''}`);
+        });
+        validation.warnings.forEach((warn) => {
+          this.logger.warn(`  ${warn.code}: ${warn.message}${warn.location ? ` (${warn.location})` : ''}`);
+          if (warn.suggestion) {
+            this.logger.info(`    Suggestion: ${warn.suggestion}`);
           }
         });
         throw new GenerationError("Input validation failed");
@@ -620,12 +623,12 @@ See [fost documentation](https://docs.fost.dev) for more information.
         this.progress.error("");
         this.logger.error("Validation failed:");
         result.errors.forEach((err) => {
-          this.logger.error(`  [${err.code}] ${err.message}`);
-          if (err.code) {
-            this.logger.error(`    Location: ${err.code}`);
-          }
-          if (err.suggestion) {
-            this.logger.error(`    Suggestion: ${err.suggestion}`);
+          this.logger.error(`  [${err.code}] ${err.message}${err.location ? ` (${err.location})` : ''}`);
+        });
+        result.warnings.forEach((warn) => {
+          this.logger.warn(`  [${warn.code}] ${warn.message}${warn.location ? ` (${warn.location})` : ''}`);
+          if (warn.suggestion) {
+            this.logger.info(`    Suggestion: ${warn.suggestion}`);
           }
         });
         throw new GenerationError("Validation failed");
@@ -659,8 +662,8 @@ See [fost documentation](https://docs.fost.dev) for more information.
       const result = (await this.api.runTests({
         sdkPath: path,
         testType,
-        coverage: options.coverage,
-        watch: options.watch,
+        coverage: (options.coverage as boolean | undefined),
+        watch: (options.watch as boolean | undefined),
       })) as TestResult;
 
       if (result.success) {
@@ -705,8 +708,8 @@ See [fost documentation](https://docs.fost.dev) for more information.
 
       const result = (await this.api.lintCode({
         sdkPath: path,
-        fix: options.fix,
-        strict: options.strict,
+        fix: (options.fix as boolean | undefined),
+        strict: (options.strict as boolean | undefined),
       })) as LintResult;
 
       if (result.totalIssues === 0) {
