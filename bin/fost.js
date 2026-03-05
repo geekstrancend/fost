@@ -13,7 +13,7 @@
  * 130 - SIGINT (user abort)
  */
 
-const { bootstrap } = require('../dist/src/cli/bootstrap');
+const { bootstrap } = require('../dist/cli/bootstrap');
 
 bootstrap({ argv: process.argv.slice(2) })
   .catch((error) => {

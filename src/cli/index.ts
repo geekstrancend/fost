@@ -459,8 +459,8 @@ See [fost documentation](https://docs.fost.dev) for more information.
       try {
         const validation = await this.api.validate({
           inputFile: options.input,
-          type: options.type,
-          strict: options.strict,
+          type: (options.type as any) || "web2",
+          strict: options.strict as any,
         }) as ValidationResult;
 
         if (!validation.valid) {
@@ -488,8 +488,8 @@ See [fost documentation](https://docs.fost.dev) for more information.
       this.progress.update("Validating input...", 10);
       const validation = await this.api.validate({
         inputFile: options.input,
-        type: options.type,
-        strict: options.strict,
+        type: (options.type as any) || "web2",
+        strict: options.strict as any,
       }) as ValidationResult;
 
       if (!validation.valid) {
@@ -510,30 +510,30 @@ See [fost documentation](https://docs.fost.dev) for more information.
       this.progress.update("Analyzing schema...", 25);
       const analysis = await this.api.analyzeInput({
         inputFile: options.input,
-        type: options.type,
+        type: (options.type as any) || "web2",
       });
 
       this.progress.update("Generating code...", 45);
       const generation = (await this.api.generate({
         inputFile: options.input,
         language,
-        type: options.type,
+        type: (options.type as any) || "web2",
         outputPath: output,
-        name: options.name,
-        version: options.version,
+        name: (options.name as any),
+        version: (options.version as any),
         config: {
           ...config,
           includeTests: !options.skipTests,
           includeDocumentation: !options.skipDocs,
         },
-      })) as GenerationResult;
+      })) as any;
 
       if (!options.skipTests) {
         this.progress.update("Generating tests...", 70);
         await this.api.generateTests({
           outputPath: output,
           language,
-          type: options.type,
+          type: (options.type as any) || "web2",
         });
       }
 
@@ -612,9 +612,9 @@ See [fost documentation](https://docs.fost.dev) for more information.
 
       const result = (await this.api.validate({
         inputFile: options.input,
-        type,
-        strict: options.strict,
-        customRules: options.rules,
+        type: (type as any) || "web2",
+        strict: options.strict as any,
+        customRules: (options.rules as any),
       })) as ValidationResult;
 
       if (result.valid) {
@@ -661,10 +661,10 @@ See [fost documentation](https://docs.fost.dev) for more information.
 
       const result = (await this.api.runTests({
         sdkPath: path,
-        testType,
-        coverage: (options.coverage as boolean | undefined),
-        watch: (options.watch as boolean | undefined),
-      })) as TestResult;
+        testType: (testType as any),
+        coverage: (options.coverage as any),
+        watch: (options.watch as any),
+      })) as any;
 
       if (result.success) {
         this.progress.complete(
@@ -708,9 +708,9 @@ See [fost documentation](https://docs.fost.dev) for more information.
 
       const result = (await this.api.lintCode({
         sdkPath: path,
-        fix: (options.fix as boolean | undefined),
-        strict: (options.strict as boolean | undefined),
-      })) as LintResult;
+        fix: (options.fix as any),
+        strict: (options.strict as any),
+      })) as any;
 
       if (result.totalIssues === 0) {
         this.progress.complete("No linting issues found!");
@@ -762,7 +762,7 @@ See [fost documentation](https://docs.fost.dev) for more information.
           if (!options.key || !options.value) {
             throw new CLIUsageError("Usage: fost config set <key> <value>");
           }
-          await this.api.setConfig(options.key, options.value);
+          await this.api.setConfig(String(options.key), String(options.value));
           this.logger.success(`Set ${options.key} = ${options.value}`);
           break;
         }

@@ -47,7 +47,7 @@ describe('CLI E2E Tests', () => {
   it('should fail gracefully with non-existent input file', () => {
     try {
       execSync(
-        'npm run cli -- generate --input /nonexistent/file.json --lang typescript --type web2',
+        'node bin/fost.js generate --input /nonexistent/file.json --lang typescript --type web2',
         { stdio: 'pipe' }
       );
       expect.fail('Should have thrown error');
@@ -72,7 +72,7 @@ describe('CLI E2E Tests', () => {
 
     try {
       execSync(
-        `npm run cli -- generate --input ${inputFile} --lang typescript --type web2 --output ${outputDir}`,
+        `node bin/fost.js generate --input ${inputFile} --lang typescript --type web2 --output ${outputDir}`,
         { stdio: 'pipe' }
       );
 
@@ -90,7 +90,7 @@ describe('CLI E2E Tests', () => {
 
     try {
       execSync(
-        `npm run cli -- validate --input ${invalidSpec} --type web2`,
+        `node bin/fost.js validate --input ${invalidSpec} --type web2`,
         { stdio: 'pipe' }
       );
       expect.fail('Should have thrown error');

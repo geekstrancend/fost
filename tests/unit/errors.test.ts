@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { CLIUsageError, SpecValidationError, GenerationError, ConfigError } from '../../dist/src/errors';
+import { CLIUsageError, SpecValidationError, GenerationError, ConfigError } from '../../dist/errors';
 
 describe('Error Classes', () => {
   describe('CLIUsageError', () => {
