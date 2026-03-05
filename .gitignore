@@ -1,45 +1,64 @@
 # Dependencies
 node_modules/
-npm-debug.log
-*.lock
+/.pnp
+.pnp.js
 
-# Build outputs
+# Testing
+/coverage
+.nyc_output/
+
+# Production
 /dist
-.next/
-.vercel/
+/build
+.next
+out/
 
-# Development
+# Misc
+*.log
+*.swp
+*.swo
+*~
+.DS_Store
 .vscode/
 .env
 .env.local
 .env.*.local
 
 # IDE
-*.swp
-*.swo
-*~
-.DS_Store
-*.sublime-workspace
-*.sublime-project
-
-# OS
-Thumbs.db
-.DS_Store
-
-# Test coverage
-coverage/
-.nyc_output/
+.idea/
+*.iml
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
 
 # Temporary files
-*.tmp
-*.temp
+.temp/
+temp/
 
-# Landing site build artifacts
-landing/.next/
-landing/node_modules/
-landing/dist/
-landing/.env.local
-landing/package-lock.json
+# Landing app specific
+landing/.env.example
+landing/.gitignore
+landing/.github
+landing/AUDIT_COMPLETE.md
+landing/CHANGELOG.md
+landing/CONTRIBUTING.md
+landing/DEPLOYMENT_EXECUTION_REPORT.md
+landing/DOCUMENTATION_INDEX.md
+landing/FINAL_STATUS_REPORT.md
+landing/IMPLEMENTATION_AUDIT.md
+landing/LAUNCH_CHECKLIST.md
+landing/MASTER_INDEX.md
+landing/PROGRESS_VISUAL.txt
+landing/PROJECT_README.md
+landing/QUICK_REFERENCE.md
+landing/SECTION_3_4_STATUS.md
+landing/SESSION_COMPLETE.md
+landing/QuickStart/
+landing/QUICK_START.md
+landing/bin/
+landing/docs/
+landing/tests/
 
-# Root node_modules should also be ignored in some cases
-# but keeping it tracked as optional based on project needs
+# WEB3 & CI configuration
+.gitlab-ci.yml

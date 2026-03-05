@@ -1,8 +1,100 @@
-# Fost Landing Site
+# FOST — AI-Powered SDK Generator
 
-A modern, developer-friendly landing site for an AI-powered SDK generator (Web2 + Web3). Built with Next.js, TypeScript, and Tailwind CSS.
+> **FOST** is an AI-powered code generation tool that transforms API specifications into complete, production-ready SDKs in minutes.
 
-## 🎨 Design Philosophy
+**Status**: 🟡 Alpha (v0.1.0)  
+**License**: MIT  
+**Repository**: [github.com/Emmyhack/fost](https://github.com/Emmyhack/fost)  
+**Live Site**: [fost.vercel.app](https://fost.vercel.app)
+
+---
+
+## 📖 Quick Links
+
+- 📚 **[Full Project README](./PROJECT_README.md)** - Comprehensive documentation and CLI guide
+- 🏗️ **[Architecture Guide](./docs/ARCHITECTURE.md)** - Technical architecture and module breakdown
+- 🤝 **[Contributing Guide](./CONTRIBUTING.md)** - How to contribute and develop locally
+- 📋 **[Changelog](./CHANGELOG.md)** - Version history and roadmap
+
+---
+
+## 🎯 What is FOST?
+
+FOST generates production-ready, fully-typed SDKs from API specifications:
+
+- **REST APIs** (OpenAPI/Swagger)
+- **Smart Contracts** (EVM ABI)
+- **GraphQL** (planned)
+- **Solana IDL** (planned)
+
+Output in:
+- **TypeScript** ✅ (production-ready)
+- **Python, Go, Rust** (planned)
+
+---
+
+## 🚀 Quick Start
+
+### Installation
+
+```bash
+# Install globally (when published to npm)
+npm install -g fost
+
+# Or use npx
+npx fost generate --help
+```
+
+### Generate Your First SDK
+
+```bash
+# From an OpenAPI spec
+fost generate \
+  --input api.openapi.yaml \
+  --language typescript \
+  --type web2 \
+  --output ./sdk
+
+# From a smart contract ABI
+fost generate \
+  --input Contract.abi.json \
+  --language typescript \
+  --type web3 \
+  --output ./contract-sdk
+```
+
+---
+
+## 🏗️ This Repository
+
+This repo contains two main parts:
+
+### `landing/` — Next.js Platform & Landing Page
+
+- Modern, responsive design
+- Documentation portal
+- Platform dashboard (WIP)
+- Authentication system
+- Built with Next.js, React, TypeScript, Tailwind CSS
+
+### `src/` — Core CLI & Generation Engine
+
+- CLI tool for SDK generation
+- Specification parsers (OpenAPI, ABI)
+- Code generators (TypeScript)
+- LLM integration (OpenAI)
+- Configuration management
+- Error handling & logging
+
+See **[Architecture Guide](./docs/ARCHITECTURE.md)** for complete module breakdown.
+
+---
+
+## 📦 Landing Page (This Directory)
+
+This is the Next.js landing page and platform for FOST.
+
+### 🎨 Design Philosophy
 
 - **Simple & Aesthetic**: Clean typography, generous spacing, no gradients
 - **Green Accent Color**: `#10B981` used strategically for CTAs, icons, and highlights
@@ -10,28 +102,35 @@ A modern, developer-friendly landing site for an AI-powered SDK generator (Web2 
 - **Mobile-First**: Fully responsive design optimized for all devices
 - **Educational Focus**: Step-by-step CLI walkthrough, AI explanation, code examples
 
-## 🚀 Quick Start
+## �️ Development
 
 ### Prerequisites
 
 - Node.js 18+ and npm
+- Git
 
-### Installation
+### Local Setup
 
 ```bash
-cd landing
+# Clone repository
+git clone https://github.com/Emmyhack/fost.git
+cd fost/landing
+
+# Install dependencies
 npm install
+
+# Set up environment (optional for local dev)
+cp ../.env.example .env.local
 ```
 
-### Development
-
-Run the development server:
+### Running Locally
 
 ```bash
+# Development server
 npm run dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+# Open http://localhost:3000
+```
 
 ### Production Build
 
@@ -40,266 +139,132 @@ npm run build
 npm start
 ```
 
-## 📁 Project Structure
+### Deployment
 
-```
-landing/
-├── app/
-│   ├── components/
-│   │   ├── Hero.tsx              # Main hero section with headline & CTAs
-│   │   ├── HowItWorks.tsx        # 4-step CLI walkthrough
-│   │   ├── Features.tsx          # Feature cards grid
-│   │   ├── CodeExamples.tsx      # Web2 & Web3 SDK examples
-│   │   ├── AIExplainer.tsx       # AI design system & FAQ
-│   │   ├── CodeBlock.tsx         # Reusable code block component
-│   │   └── Footer.tsx            # CTA section & footer
-│   ├── constants.ts              # Centralized content & config
-│   ├── globals.css               # Global styles & animations
-│   ├── layout.tsx                # Root layout with metadata
-│   └── page.tsx                  # Main landing page
-├── public/                       # Static assets (favicon, images, etc.)
-├── next.config.ts                # Next.js configuration
-├── tailwind.config.ts            # Tailwind CSS customization
-├── tsconfig.json                 # TypeScript configuration
-└── package.json
+The landing page is deployed on **Vercel** automatically on commits to `main`:
+
+```bash
+# Manual deploy
+vercel deploy --prod
 ```
 
-## 🎯 Key Features
+See [Vercel docs](https://vercel.com/docs) for more options.
 
-### Sections
+## 📁 Landing Page Structure
 
-1. **Hero**: Attention-grabbing headline, subtitle, and dual CTAs
-2. **How It Works**: 4-step visual guide with code snippets & terminal output
-3. **Features**: 6 feature cards highlighting key capabilities
-4. **Code Examples**: Side-by-side Web2 & Web3 SDK examples
-5. **AI Explainer**: Explains AI design system, control, and determinism
-6. **FAQ**: Collapsible Q&A for developer concerns
-7. **CTA & Footer**: Final call-to-action and navigation
-
-### Interactive Elements
-
-- **Code Block Component**: Copy button, syntax highlighting, terminal styling
-- **Collapsible FAQ**: Smooth open/close animations
-- **Hover Effects**: Subtle green highlights and shadow transitions
-- **Animations**: Fade-in and slide-up effects for engagement
-
-## 🎨 Customization Guide
-
-### Update Site Copy & Links
-
-Edit [app/constants.ts](app/constants.ts):
-
-```typescript
-export const SITE_CONFIG = {
-  title: 'Fost',
-  github: 'https://github.com/yourorg/fost',
-  npm: 'https://www.npmjs.com/package/fost',
-  docs: 'https://docs.example.com',
-  // ... etc
-};
-
-export const STEPS = [
-  // Update the 4-step walkthrough
-];
-
-export const FEATURES = [
-  // Update feature cards
-];
-
-export const WEB2_EXAMPLE = { /* ... */ };
-export const WEB3_EXAMPLE = { /* ... */ };
+```
+app/
+├── components/
+│   ├── Hero.tsx           # Main headline, CTAs, quick start
+│   ├── HowItWorks.tsx     # 4-step CLI walkthrough
+│   ├── Features.tsx       # 6 feature cards
+│   ├── CodeExamples.tsx   # Web2 & Web3 examples
+│   ├── AIExplainer.tsx    # AI system & FAQ
+│   ├── CodeBlock.tsx      # Code snippet component
+│   └── Footer.tsx         # CTA & footer links
+├── constants.ts           # Site config, copy, links
+├── globals.css            # Global styles & animations
+├── layout.tsx             # Root layout
+└── page.tsx               # Main landing page
 ```
 
-### Update Colors
+## 🎨 Customization
 
-Edit [tailwind.config.ts](tailwind.config.ts):
+Edit **[app/constants.ts](app/constants.ts)** to update:
+- Site title, tagline, description
+- GitHub, npm, and docs links
+- Social media links
+- 4-step walkthrough
+- Feature cards
+- Code examples
+- FAQ questions
 
-```typescript
-colors: {
-  'accent-green': '#10B981',           // Primary accent
-  'accent-green-light': '#ECFDF5',     // Light variant
-  'accent-green-dark': '#059669',      // Dark variant
-  // ... other colors
-}
-```
-
-### Typography
-
-Edit [app/globals.css](app/globals.css) to customize fonts, sizes, and spacing.
-
-### Add New Sections
-
-1. Create a new component in `app/components/`
-2. Import in `app/page.tsx`
-3. Add between existing sections with dividers:
-
-```tsx
-<section className="...">
-  {/* Your component */}
-</section>
-
-<div className="h-px bg-gray-200"></div>
-
-<YourNewComponent />
-```
-
-## 📱 Responsive Design
-
-All sections are mobile-first responsive using Tailwind's breakpoints:
-
-- **Mobile**: `default` (no prefix)
-- **Tablet**: `sm:` (≥640px), `md:` (≥768px)
-- **Desktop**: `lg:` (≥1024px), `xl:` (≥1280px)
-
-Test on mobile by resizing your browser or using DevTools.
-
-## 🎬 Animations
-
-Animations defined in [app/globals.css](app/globals.css):
-
-- `animate-fade-in`: Smooth opacity transition
-- `animate-slide-up`: Slide up with fade effect
-- `card-hover`: Subtle shadow & border color change
-
-Customize animation timing and delays:
-
-```tsx
-<div 
-  className="animate-slide-up"
-  style={{ animationDelay: '100ms' }}
->
-  Content
-</div>
-```
-
-## 🔧 Styling & Tailwind
-
-The site uses Tailwind CSS for all styling. Key utilities:
-
-- `bg-white`, `bg-gray-50` — Backgrounds
-- `text-accent-green` — Accent text
-- `border-accent-green` — Accent borders
-- `hover:bg-accent-green` — Hover states
-- `rounded-lg`, `shadow-md` — Spacing & shadows
-- `flex`, `grid` — Layouts
-
-All styles are configured in [tailwind.config.ts](tailwind.config.ts).
-
-## 📝 Component API
-
-### CodeBlock
-
-Reusable code snippet component with copy button.
-
-```tsx
-<CodeBlock 
-  code="npm install fost"
-  isTerminal={false}
-  language="bash"
-/>
-```
-
-Props:
-- `code: string` — Code to display
-- `isTerminal?: boolean` — Render as terminal (default: false)
-- `language?: string` — Language hint (default: typescript)
-
-### Features Card
-
-Auto-renders from FEATURES array in constants. Each feature:
-
-```typescript
-{
-  title: string,
-  description: string,
-  icon: string,  // emoji
-}
-```
+Edit **[tailwind.config.ts](tailwind.config.ts)** to customize colors, fonts, and spacing.
 
 ## 🚢 Deployment
 
-### Vercel (Recommended)
+### On Vercel (Recommended)
 
 ```bash
-npm install -g vercel
+# First time
 vercel
+
+# Subsequent pushes to main auto-deploy
 ```
 
 ### Docker
 
 ```dockerfile
-FROM node:18-alpine
+FROM node:20-alpine
 WORKDIR /app
 COPY package*.json ./
-RUN npm install
+RUN npm ci
 COPY . .
 RUN npm run build
 EXPOSE 3000
 CMD ["npm", "start"]
 ```
 
-### GitHub Pages
-
-Build and deploy manually:
-
-```bash
-npm run build
-# Upload ./out to GitHub Pages
-```
-
-## 🔍 Performance
-
-- **Static Rendering**: Pages pre-rendered at build time
-- **Image Optimization**: Use Next.js `Image` component
-- **Code Splitting**: Components split automatically by Next.js
-- **Lighthouse**: Target 90+ on all metrics
-
-Check performance:
-
-```bash
-npm run build  # See build output metrics
-```
+## � Performance
 
 ## 🐛 Troubleshooting
 
 ### Build fails with module not found
 
-Ensure all imports use relative paths (not `@/` alias for app-level constants):
-
-```tsx
-// ✓ Correct
-import { SITE_CONFIG } from '../constants';
-
-// ✗ Avoid
-import { SITE_CONFIG } from '@/constants';
+Ensure Node modules are installed:
+```bash
+rm -rf node_modules package-lock.json
+npm install
 ```
 
 ### Styles not applying
 
-1. Clear cache: `rm -rf .next`
-2. Rebuild: `npm run build`
-3. Check Tailwind config includes all file paths
+```bash
+# Clear Next.js cache
+rm -rf .next
+
+# Rebuild
+npm run build
+```
 
 ### Dev server slow
 
-- Restart dev server: `npm run dev`
-- Check for TypeScript errors: `npm run lint`
+- Restart: `npm run dev`
+- Check for TS errors: `npm run lint`
+- Check system resources
 
-## 📚 Resources
+## 📚 Additional Resources
 
 - [Next.js Documentation](https://nextjs.org/docs)
 - [Tailwind CSS](https://tailwindcss.com)
 - [React Documentation](https://react.dev)
 - [TypeScript Handbook](https://www.typescriptlang.org/docs)
-
-## 📄 License
-
-MIT — Feel free to use, modify, and distribute.
+- [FOST Documentation](./docs/)
+- [FOST Architecture](./docs/ARCHITECTURE.md)
 
 ## 🤝 Contributing
 
-Contributions welcome! Please follow the existing code style and component patterns.
+Please see [CONTRIBUTING.md](./CONTRIBUTING.md) for:
+
+- Development setup
+- Testing guidelines
+- Code style & formatting
+- Pull request process
+- Commit message conventions
+
+## 📄 License
+
+MIT — See [LICENSE](../LICENSE) for details.
+
+## 🙏 Acknowledgments
+
+- Built with [Next.js](https://nextjs.org/)
+- Styled with [Tailwind CSS](https://tailwindcss.com)
+- Animation by [Framer Motion](https://www.framer.com/motion/)
+- Part of the [FOST](https://github.com/Emmyhack/fost) project
 
 ---
 
-**Built with ❤️ by the Fost Team**
+**Status**: 🟡 Alpha  
+**Last Updated**: March 5, 2026  
+**GitHub**: [Emmyhack/fost](https://github.com/Emmyhack/fost)
