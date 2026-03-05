@@ -1,7 +1,7 @@
 {
   "name": "fost",
   "version": "0.1.0",
-  "description": "AI-powered SDK generator for Web2 and Web3 APIs. Generate fully-typed, documented SDKs in minutes from OpenAPI, GraphQL, or smart contract ABIs.",
+  "description": "AI-powered SDK generator for Web2 and Web3 APIs. Generate fully-typed, documented TypeScript SDKs in minutes from OpenAPI or smart contract ABIs.",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
   "bin": {
@@ -14,6 +14,30 @@
     "LICENSE",
     "package.json"
   ],
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  },
+  "keywords": [
+    "sdk",
+    "generator",
+    "ai",
+    "openapi",
+    "web3",
+    "smart-contracts",
+    "typescript",
+    "code-generation"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Emmyhack/fost.git"
+  },
+  "homepage": "https://fost.vercel.app",
+  "bugs": {
+    "url": "https://github.com/Emmyhack/fost/issues"
+  },
+  "author": "Emmyhack",
+  "license": "MIT",
   "exports": {
     ".": {
       "types": "./dist/src/index.d.ts",
