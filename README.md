@@ -1,10 +1,10 @@
 # Fost - AI-Powered SDK Generator
 
-Generate fully-typed, production-ready SDKs in minutes from OpenAPI specs, GraphQL schemas, or smart contract ABIs.
+Generate fully-typed, production-ready **TypeScript** SDKs in minutes from OpenAPI specs or smart contract ABIs.
 
 ## What is Fost?
 
-Fost is a powerful CLI tool that transforms API specifications into complete, type-safe SDKs with zero configuration. Supports both Web2 (REST, GraphQL) and Web3 (smart contracts) APIs.
+Fost is a powerful CLI tool that transforms API specifications into complete, type-safe TypeScript SDKs with zero configuration. Supports both Web2 (REST APIs) and Web3 (smart contracts) specifications.
 
 **Why Fost?**
 - ⚡ **Fast**: Generate SDKs in minutes, not days
@@ -37,10 +37,19 @@ fost validate api.openapi.yaml
 
 ## Features
 
-### Supported Input Formats
+### Supported Input Formats ✅
 - **REST APIs**: OpenAPI 3.0+, Swagger 2.0
-- **Smart Contracts**: EVM ABI, Solana IDL
+- **Smart Contracts**: EVM ABI (Ethereum, Polygon, Arbitrum, etc.)
 - **Blockchain**: Chain metadata for multi-chain support
+
+### Output Target Languages ✅
+- **TypeScript** (Production-ready, fully featured)
+
+### Roadmap 🗓️
+- Python code generation (v0.2)
+- GraphQL schema support (v0.2)
+- Solana IDL support (v0.2)
+- Go, Rust language targets (future)
 
 ### Generated SDK Includes
 - Fully-typed client class
