@@ -67,8 +67,12 @@
     "ci:validate": "npm run lint && npm run test && npm run batch:generate -- --no-validate"
   },
   "devDependencies": {
-    "@types/node": "^25.3.3",
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^25.3.5",
+    "@typescript-eslint/eslint-plugin": "^8.56.1",
+    "@typescript-eslint/parser": "^8.56.1",
     "@vitest/coverage-v8": "^4.0.18",
+    "eslint": "^10.0.2",
     "typescript": "^5.9.3",
     "vitest": "^4.0.18"
   },
