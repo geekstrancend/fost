@@ -120,7 +120,7 @@ export class ConfigLoader {
     try {
       // Clear require cache to ensure fresh load
       delete require.cache[require.resolve(filePath)];
-      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
       const module = require(filePath);
       const config = module.default || module;
       
@@ -142,11 +142,11 @@ export class ConfigLoader {
    * @returns Parsed and validated configuration
    * @throws {Error} If file cannot be loaded or parsed
    */
-  private static loadJsConfig(filePath: string): FostConfig {
+  private static async loadJsConfig(filePath: string): Promise<FostConfig> {
     try {
       // Clear require cache to ensure fresh load
       delete require.cache[require.resolve(filePath)];
-      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
       const module = require(filePath);
       const config = module.default || module;
 

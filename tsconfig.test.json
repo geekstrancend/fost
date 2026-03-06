@@ -3,7 +3,9 @@
   "compilerOptions": {
     "noUnusedLocals": false,
     "noUnusedParameters": false,
-    "types": ["vitest/globals", "node"]
+    "types": ["vitest/globals", "node"],
+    "module": "ESNext",
+    "moduleResolution": "bundler"
   },
   "include": ["tests/**/*", "src/**/*"]
 }

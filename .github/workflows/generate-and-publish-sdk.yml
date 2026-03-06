@@ -136,41 +136,14 @@ jobs:
             --examples \
             --validate
 
-      - name: Generate Python SDK
-        run: |
-          mkdir -p "${{ steps.output.outputs.python_dir }}"
-          npm run cli -- generate \
-            --input "${{ steps.metadata.outputs.spec_file }}" \
-            --language python \
-            --type ${{ steps.metadata.outputs.api_type }} \
-            --output "${{ steps.output.outputs.python_dir }}" \
-            --docs \
-            --examples \
-            --validate
-
-      - name: Generate Go SDK
-        run: |
-          base_dir="generated-sdks/${{ steps.metadata.outputs.sdk_name }}"
-          mkdir -p "$base_dir/go"
-          npm run cli -- generate \
-            --input "${{ steps.metadata.outputs.spec_file }}" \
-            --language go \
-            --type ${{ steps.metadata.outputs.api_type }} \
-            --output "$base_dir/go" \
-            --docs \
-            --examples \
-            --validate
-
       - name: Validate generated code
         run: |
           echo "Validating generated SDKs..."
           # TypeScript
           cd "${{ steps.output.outputs.typescript_dir }}" && npm install --prefer-offline 2>/dev/null && npm run build 2>/dev/null && cd - || true
-          # Python
-          cd "${{ steps.output.outputs.python_dir }}" && python -m py_compile *.py 2>/dev/null || true
 
       - name: Upload generated SDKs
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: generated-sdk-${{ steps.metadata.outputs.sdk_name }}
           path: generated-sdks/${{ steps.metadata.outputs.sdk_name }}
@@ -190,8 +163,6 @@ jobs:
 
             **Generated Artifacts:**
             - TypeScript: \`generated-sdks/${sdkName}/typescript\`
-            - Python: \`generated-sdks/${sdkName}/python\`
-            - Go: \`generated-sdks/${sdkName}/go\`
 
             Download artifacts from the workflow run to review the generated code.`;
 
@@ -217,9 +188,10 @@ jobs:
         with:
           node-version: '18'
           registry-url: 'https://registry.npmjs.org'
+          cache: 'npm'
 
       - name: Download all artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           path: generated-sdks
 
@@ -237,48 +209,10 @@ jobs:
             fi
           done
 
-  publish-to-pypi:
-    name: Publish to PyPI
-    runs-on: ubuntu-latest
-    needs: generate-sdk
-    if: |
-      (github.event_name == 'push' && github.ref == 'refs/heads/main') ||
-      (github.event_name == 'workflow_dispatch' && github.event.inputs.publish == 'true')
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.10'
-
-      - name: Download all artifacts
-        uses: actions/download-artifact@v3
-        with:
-          path: generated-sdks
-
-      - name: Install Python dependencies
-        run: pip install build twine
-
-      - name: Publish Python SDKs
-        env:
-          TWINE_USERNAME: __token__
-          TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
-        run: |
-          for sdk_dir in generated-sdks/generated-sdk-*/python; do
-            if [ -d "$sdk_dir" ] && [ -f "$sdk_dir/setup.py" ]; then
-              echo "Publishing $(basename $(dirname $(dirname $sdk_dir)))..."
-              cd "$sdk_dir"
-              python -m build
-              twine upload dist/* --skip-existing
-              cd -
-            fi
-          done
-
   create-release:
     name: Create Release
     runs-on: ubuntu-latest
-    needs: [generate-sdk, publish-to-npm, publish-to-pypi]
+    needs: [generate-sdk, publish-to-npm]
     if: |
       github.event_name == 'push' && 
       github.ref == 'refs/heads/main' &&
@@ -287,7 +221,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Download all artifacts
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           path: generated-sdks
 
@@ -313,15 +247,15 @@ jobs:
           echo "EOF" >> $GITHUB_OUTPUT
 
       - name: Create GitHub Release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: softprops/action-gh-release@v2
         with:
-          tag_name: sdk-${{ github.run_number }}
-          release_name: SDK Release #${{ github.run_number }}
+          files: generated-sdks/**/*
           body: ${{ steps.release.outputs.release_body }}
+          tag_name: sdk-${{ github.run_number }}
           draft: false
           prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   notification:
     name: Send Notification

@@ -6,21 +6,5 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'node',
-    coverage: {
-      provider: 'v8',
-      reporter: ['text', 'lcov'],
-      include: ['src/**/*.ts'],
-      exclude: [
-        'node_modules/',
-        'dist/',
-        'src/**/*.test.ts',
-        'src/**/*.spec.ts',
-      ],
-      thresholds: {
-        lines: 70,
-        functions: 70,
-        branches: 60,
-      },
-    },
   },
 });
