@@ -178,7 +178,7 @@ export function createGeneratorAPI(): GeneratorAPI {
       try {
         return { content: JSON.parse(content), format: "json" };
       } catch (e) {
-        throw new Error(`Invalid JSON in ${filePath}: ${(e as Error).message}`);
+        throw new Error(`Invalid JSON in ${filePath}: ${(e as Error).message}`, { cause: e });
       }
     }
 
@@ -187,7 +187,7 @@ export function createGeneratorAPI(): GeneratorAPI {
         const parsed = yaml.load(content);
         return { content: parsed || {}, format: "yaml" };
       } catch (e) {
-        throw new Error(`Failed to parse YAML in ${filePath}: ${(e as Error).message}`);
+        throw new Error(`Failed to parse YAML in ${filePath}: ${(e as Error).message}`, { cause: e });
       }
     }
 
@@ -307,7 +307,8 @@ export function createGeneratorAPI(): GeneratorAPI {
       } catch (error) {
         const duration = Date.now() - startTime;
         throw new Error(
-          `SDK generation failed: ${(error as Error).message} (${duration}ms)`
+          `SDK generation failed: ${(error as Error).message} (${duration}ms)`,
+          { cause: error }
         );
       }
     },

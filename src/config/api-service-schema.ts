@@ -278,7 +278,9 @@ export interface ListGenerationsRequest {
 }
 
 export interface ListGenerationsResponse
-  extends PaginatedResponse<GetGenerationResponse> {}
+  extends PaginatedResponse<GetGenerationResponse> {
+  // Empty interface for type safety - extends PaginatedResponse
+}
 
 /**
  * Usage Report

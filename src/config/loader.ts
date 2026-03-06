@@ -120,6 +120,7 @@ export class ConfigLoader {
     try {
       // Clear require cache to ensure fresh load
       delete require.cache[require.resolve(filePath)];
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const module = require(filePath);
       const config = module.default || module;
       
@@ -130,7 +131,7 @@ export class ConfigLoader {
       return this.mergeConfig(config);
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
-      throw new Error(`Failed to load TypeScript config from ${filePath}: ${message}`);
+      throw new Error(`Failed to load TypeScript config from ${filePath}: ${message}`, { cause: error });
     }
   }
 
@@ -145,6 +146,7 @@ export class ConfigLoader {
     try {
       // Clear require cache to ensure fresh load
       delete require.cache[require.resolve(filePath)];
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const module = require(filePath);
       const config = module.default || module;
 
@@ -155,7 +157,7 @@ export class ConfigLoader {
       return this.mergeConfig(config);
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
-      throw new Error(`Failed to load JS config from ${filePath}: ${message}`);
+      throw new Error(`Failed to load JS config from ${filePath}: ${message}`, { cause: error });
     }
   }
 
@@ -178,7 +180,7 @@ export class ConfigLoader {
       return this.mergeConfig(config);
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
-      throw new Error(`Failed to parse .fostrc: ${message}`);
+      throw new Error(`Failed to parse .fostrc: ${message}`, { cause: error });
     }
   }
 
@@ -201,7 +203,7 @@ export class ConfigLoader {
       return null;
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
-      throw new Error(`Failed to parse package.json: ${message}`);
+      throw new Error(`Failed to parse package.json: ${message}`, { cause: error });
     }
   }
 

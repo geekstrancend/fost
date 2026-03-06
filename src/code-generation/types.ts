@@ -380,8 +380,14 @@ export interface ASTProgram extends ASTNode {
   body: ASTStatement[];
 }
 
+/**
+ * Empty interface for type safety - extends ASTNode
+ */
 export interface ASTStatement extends ASTNode {}
 
+/**
+ * Empty interface for type safety - extends ASTNode
+ */
 export interface ASTExpression extends ASTNode {}
 
 export interface ASTImportStatement extends ASTStatement {

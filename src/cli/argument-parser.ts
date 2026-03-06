@@ -184,7 +184,7 @@ export function parseConfig(configPath: string): CLIConfig {
 
     return config;
   } catch (error: any) {
-    throw new Error(`Failed to parse config: ${error.message}`);
+    throw new Error(`Failed to parse config: ${error.message}`, { cause: error });
   }
 }
 

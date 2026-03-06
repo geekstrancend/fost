@@ -810,6 +810,7 @@ See [fost documentation](https://docs.fost.dev) for more information.
    */
   private handleVersion(): void {
     // Use dynamic require for version
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     const version = require("../../package.json").version as string;
     console.log(`fost ${version}`);
   }

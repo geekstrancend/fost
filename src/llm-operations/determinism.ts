@@ -244,7 +244,7 @@ export class ReproducibilityTester {
     }
 
     // Analyze reproducibility
-    let matches = 0;
+    let matches: number;
     if (test.expectedOutput) {
       // Compare against expected output
       matches = outputs.filter(o => this.similarity(o, test.expectedOutput!) > test.tolerance)

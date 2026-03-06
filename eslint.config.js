@@ -28,6 +28,13 @@ module.exports = [
         Buffer: 'readonly',
         __dirname: 'readonly',
         __filename: 'readonly',
+        NodeJS: 'readonly',
+        setTimeout: 'readonly',
+        clearTimeout: 'readonly',
+        setInterval: 'readonly',
+        clearInterval: 'readonly',
+        require: 'readonly',
+        module: 'readonly',
       },
     },
     plugins: {
@@ -43,6 +50,7 @@ module.exports = [
           argsIgnorePattern: '^_',
         },
       ],
+      '@typescript-eslint/no-empty-object-type': 'off',
       'no-console': [
         'warn',
         {
