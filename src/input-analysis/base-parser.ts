@@ -231,6 +231,11 @@ export function extractType(schema: any): string {
 
   // Direct type
   if (schema.type) {
+    // Handle array types
+    if (schema.type === "array" && schema.items) {
+      const itemType = extractType(schema.items);
+      return `${itemType}[]`;
+    }
     return schema.type;
   }
 
@@ -247,7 +252,8 @@ export function extractType(schema: any): string {
 
   // items indicates array
   if (schema.items) {
-    return "array";
+    const itemType = extractType(schema.items);
+    return `${itemType}[]`;
   }
 
   // enum indicates enum

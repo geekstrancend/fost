@@ -461,7 +461,7 @@ See [fost documentation](https://docs.fost.dev) for more information.
           inputFile: options.input,
           type: (options.type as any) || "web2",
           strict: options.strict as any,
-        }) as ValidationResult;
+        }) as any;
 
         if (!validation.valid) {
           this.logger.error("Validation failed:");
@@ -490,7 +490,7 @@ See [fost documentation](https://docs.fost.dev) for more information.
         inputFile: options.input,
         type: (options.type as any) || "web2",
         strict: options.strict as any,
-      }) as ValidationResult;
+      }) as any;
 
       if (!validation.valid) {
         this.progress.error("");
@@ -552,7 +552,7 @@ See [fost documentation](https://docs.fost.dev) for more information.
 
       this.progress.complete(
         `Successfully generated SDK in ${output}\n` +
-        `  - ${generation.generatedFiles.length} files created\n` +
+        `  - ${generation.filesGenerated} files created\n` +
         `  - Generation completed in ${generation.duration}`
       );
 
@@ -615,7 +615,7 @@ See [fost documentation](https://docs.fost.dev) for more information.
         type: (type as any) || "web2",
         strict: options.strict as any,
         customRules: (options.rules as any),
-      })) as ValidationResult;
+      })) as any;
 
       if (result.valid) {
         this.progress.complete(`Validation passed!\n  - File: ${options.input}\n  - Type: ${type}`);

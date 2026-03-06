@@ -31,6 +31,10 @@ export class InputNormalizer {
     "Address",
     "BigInt",
     "Bytes32",
+    "object",
+    "array",
+    "void",
+    "unknown",
   ]);
 
   constructor() {
