@@ -103,7 +103,11 @@ export class RetryStrategy {
   }
 
   private sleep(ms: number): Promise<void> {
-    return new Promise(resolve => setTimeout(resolve, ms));
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    return new Promise(resolve => {
+      // eslint-disable-next-line no-undef
+      setTimeout(resolve, ms);
+    });
   }
 
   /**

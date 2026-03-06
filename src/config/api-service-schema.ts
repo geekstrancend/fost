@@ -277,6 +277,9 @@ export interface ListGenerationsRequest {
   sortOrder?: 'asc' | 'desc';
 }
 
+/**
+ * Response from list generations endpoint
+ */
 export interface ListGenerationsResponse
   extends PaginatedResponse<GetGenerationResponse> {
   // Empty interface for type safety - extends PaginatedResponse

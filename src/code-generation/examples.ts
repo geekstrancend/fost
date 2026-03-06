@@ -12,6 +12,7 @@ export function runExample() {
 }
 
 // Run if executed directly
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 if (require.main === module) {
   runExample();
 }

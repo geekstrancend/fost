@@ -71,7 +71,7 @@ export abstract class BaseParser extends SpecParser {
    */
   protected normalizePrimitiveType(type: string): string {
     // Remove GraphQL/JSON Schema modifiers
-    const cleaned = type.replace(/[![\]]]/g, "").toLowerCase();
+    const cleaned = type.replace(/[![\\]]]/g, "").toLowerCase();
 
     // Normalize common variations
     const typeMap: Record<string, string> = {

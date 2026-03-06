@@ -201,6 +201,7 @@ class MockAPITester {
     params?: unknown
   ): Promise<unknown> {
     return new Promise((resolve) => {
+      // eslint-disable-next-line no-undef
       setTimeout(() => {
         this.requestHistory.push({
           method: "POST",
