@@ -6,6 +6,8 @@ Generate fully-typed, production-ready **TypeScript** SDKs in minutes from OpenA
 
 Fost is a powerful CLI tool that transforms API specifications into complete, type-safe TypeScript SDKs with zero configuration. Supports both Web2 (REST APIs) and Web3 (smart contracts) specifications.
 
+**Repository**: [github.com/geekstrancend/fost](https://github.com/geekstrancend/fost)
+
 **Why Fost?**
 - ⚡ **Fast**: Generate SDKs in minutes, not days
 - 📦 **Complete**: Includes types, docs, tests, and examples
